@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import { RegisterLink } from '../RegisterPage';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { PasswordForgetLink } from '../PasswordForgetPage';
+import IconModal, { ICON_STATES } from '../../components/IconModal';
 
 const LoginPage = () => (
   <div>
@@ -31,15 +32,23 @@ class _LoginForm extends Component {
 
   onSubmit = event => {
     const { email, password } = this.state;
+    this.setState({
+      showModal: true,
+      modalText: 'Loading...',
+      modalIcon: ICON_STATES.LOADING,
+    });
 
     this.props.firebase
-      .doLoginWithEmailAndPassword(email, password)
+      .doSignInWithEmailAndPassword(email, password)
       .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.setState({
+          ...INITIAL_STATE,
+          modalText: 'Logged in!',
+          modalIcon: ICON_STATES.SUCCESS,
+        });
       })
       .catch(error => {
-        this.setState({ error });
+        this.setState({ error, modalText: 'Uh oh...', modalIcon: ICON_STATES.ERROR });
       });
 
     event.preventDefault();
@@ -49,13 +58,29 @@ class _LoginForm extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  handleModalFinished = () => {
+    // we should hide the modal after it's done
+    this.setState({ showModal: false }, () => {
+      if (this.state.modalIcon === ICON_STATES.SUCCESS) {
+        // redirect home
+        this.props.history.push(ROUTES.HOME);
+      }
+    });
+  };
+
   render() {
-    const { email, password, error } = this.state;
+    const { email, password, error, showModal, modalText, modalIcon } = this.state;
 
     const isInvalid = password === '' || email === '';
 
     return (
       <form onSubmit={this.onSubmit}>
+        <IconModal
+          show={showModal}
+          text={modalText}
+          icon={modalIcon}
+          onExit={this.handleModalFinished}
+        />
         <input
           name="email"
           value={email}

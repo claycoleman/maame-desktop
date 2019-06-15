@@ -31,7 +31,7 @@ const NavigationAuth = ({ isAdmin }) => (
   </ul>
 );
 
-const NavigationNonAuth = () => {
+const NavigationNonAuth = () => (
   <ul>
     <li>
       <Link to={ROUTES.LANDING}>Landing</Link>
@@ -39,7 +39,7 @@ const NavigationNonAuth = () => {
     <li>
       <Link to={ROUTES.LOGIN}>Sign In</Link>
     </li>
-  </ul>;
-};
+  </ul>
+);
 
 export default withAuthentication(Navigation);

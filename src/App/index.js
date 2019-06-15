@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
@@ -14,7 +14,9 @@ import AdminPage from '../pages/AdminPage';
 import { setupAuthentication } from '../components/Session';
 
 /*
-TODO installs  
+SETUP TODO => all SETUP TODOs should be completed and removed after copying
+
+SETUP TODO installs  
 react-router-dom
 firebase
 recompose

@@ -1,7 +1,8 @@
 import app from 'firebase/app';
 import 'firebase/auth';
+import 'firebase/firestore';
 
-// TODO make sure .env values are set up correctly
+// SETUP TODO make sure .env values are set up correctly
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -16,6 +17,11 @@ class Firebase {
     app.initializeApp(config);
 
     this.auth = app.auth();
+    this.db = app.firestore();
+
+    // SETUP TODO insert app specific collections like users
+
+    // TODO add example for users
   }
 
   // *** Auth API ***
@@ -31,6 +37,10 @@ class Firebase {
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
 
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
+
+  // SETUP TODO insert app specific functions like users
+
+  // TODO add example for users
 }
 
 export default Firebase;

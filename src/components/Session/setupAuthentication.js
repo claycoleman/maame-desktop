@@ -4,9 +4,6 @@ import AuthUserContext from './context';
 import { withFirebase } from '../Firebase';
 
 const setupAuthentication = Component => {
-  // TODO figure out how to convert this class component into a useState
-  // and useEffect functional component. don't know how to mimic componentDidMount
-  // with hooks
   class SetupAuthentication extends React.Component {
     constructor(props) {
       super(props);

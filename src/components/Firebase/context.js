@@ -9,10 +9,4 @@ export const withFirebase = Component => props => (
   </FirebaseContext.Consumer>
 );
 
-export const setupFirebase = Component => (
-  <FirebaseContext.Provider value={new Firebase()}>
-    <Component {...this.props} />
-  </FirebaseContext.Provider>
-);
-
 export default FirebaseContext;

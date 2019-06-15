@@ -6,6 +6,7 @@ import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { validateEmail } from '../../modules/helpers';
 import { LoginLink } from '../LoginPage';
+import IconModal, { ICON_STATES } from '../../components/IconModal';
 
 const RegisterPage = () => (
   <div>
@@ -16,7 +17,8 @@ const RegisterPage = () => (
 );
 
 const INITIAL_STATE = {
-  username: '',
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
   confirmPassword: '',
@@ -31,20 +33,38 @@ class _RegisterForm extends Component {
   }
 
   onSubmit = event => {
-    const { username, email, password } = this.state;
+    const { firstName, lastName, email, password } = this.state;
+    this.setState({
+      showModal: true,
+      modalText: 'Loading...',
+      modalIcon: ICON_STATES.LOADING,
+    });
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
+      // TODO add code to save name to user
       .then(authUser => {
-        this.setState({ ...INITIAL_STATE });
-        // redirect home
-        this.props.history.push(ROUTES.HOME);
+        this.setState({
+          ...INITIAL_STATE,
+          modalText: 'Registered!',
+          modalIcon: ICON_STATES.SUCCESS,
+        });
       })
       .catch(error => {
-        this.setState({ error });
+        this.setState({ error, modalText: 'Uh oh...', modalIcon: ICON_STATES.ERROR });
       });
 
     event.preventDefault();
+  };
+
+  handleModalFinished = () => {
+    // we should hide the modal after it's done
+    this.setState({ showModal: false }, () => {
+      if (this.state.modalIcon === ICON_STATES.SUCCESS) {
+        // redirect home
+        this.props.history.push(ROUTES.HOME);
+      }
+    });
   };
 
   onChange = event => {
@@ -52,22 +72,45 @@ class _RegisterForm extends Component {
   };
 
   render() {
-    const { username, email, password, confirmPassword, error } = this.state;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmPassword,
+      error,
+      showModal,
+      modalText,
+      modalIcon,
+    } = this.state;
 
     const isInvalid =
       password !== confirmPassword ||
       password === '' ||
       email === '' ||
       !validateEmail(email) ||
-      username === '';
+      firstName === '';
     return (
       <form onSubmit={this.onSubmit}>
+        <IconModal
+          show={showModal}
+          text={modalText}
+          icon={modalIcon}
+          onExit={this.handleModalFinished}
+        />
         <input
-          name="username"
-          value={username}
+          name="firstName"
+          value={firstName}
           onChange={this.onChange}
           type="text"
-          placeholder="Full Name"
+          placeholder="First Name"
+        />
+        <input
+          name="lastName"
+          value={lastName}
+          onChange={this.onChange}
+          type="text"
+          placeholder="Last Name"
         />
         <input
           name="email"

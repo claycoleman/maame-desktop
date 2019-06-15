@@ -1,7 +1,7 @@
-import React from 'react';
-import styles from './styles.css';
+import React, { Component } from 'react';
+import styles from './IconModal.module.css';
 import { CSSTransition } from 'react-transition-group';
-import { MdClear, MdInfoOutline, MdCheck } from 'react-icons/lib/md';
+import { MdClear, MdInfoOutline, MdCheck } from 'react-icons/md';
 
 export const ICON_STATES = {
   LOADING: 'loading',
@@ -10,7 +10,7 @@ export const ICON_STATES = {
   ALERT: 'alert',
 };
 
-export default class IconModal extends React.Component {
+export default class IconModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,6 +53,9 @@ export default class IconModal extends React.Component {
       // icon switched away from loading, and we haven't started the timeout yet
       this.startExitTimeout();
     }
+
+    console.log(styles);
+    console.log(styles.modalEnter);
     return (
       <CSSTransition
         in={this.props.show}

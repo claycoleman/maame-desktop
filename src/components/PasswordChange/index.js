@@ -66,7 +66,6 @@ class PasswordChangeForm extends Component {
           icon={modalIcon}
           onExit={this.handleModalFinished}
         />
-        ;
         <input
           name="password"
           value={password}

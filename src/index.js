@@ -5,8 +5,13 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 import App from './App';
-import { setupFirebase } from './components/Firebase';
+import Firebase, { FirebaseContext } from './components/Firebase';
 
-ReactDOM.render(setupFirebase(<App />), document.getElementById('root'));
+ReactDOM.render(
+  <FirebaseContext.Provider value={new Firebase()}>
+    <App />
+  </FirebaseContext.Provider>,
+  document.getElementById('root'),
+);
 
 serviceWorker.unregister();
