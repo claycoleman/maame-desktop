@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { validateEmail } from '../../modules/helpers';
-import IconModal from '../../components/IconModal';
+import IconModal, { ICON_STATES } from '../../components/IconModal';
 
 const PasswordForgetPage = () => (
   <div>
@@ -35,7 +35,7 @@ class _PasswordForgetForm extends Component {
     this.setState({
       showModal: true,
       modalText: 'Loading...',
-      modalIcon: 'loading',
+      modalIcon: ICON_STATES.LOADING,
     });
 
     this.props.firebase
@@ -44,11 +44,11 @@ class _PasswordForgetForm extends Component {
         this.setState({
           ...INITIAL_STATE,
           modalText: 'Reset password sent!',
-          modalIcon: 'success',
+          modalIcon: ICON_STATES.SUCCESS,
         });
       })
       .catch(error => {
-        this.setState({ error, modalText: 'Uh oh...', modalIcon: 'error' });
+        this.setState({ error, modalText: 'Uh oh...', modalIcon: ICON_STATES.ERROR });
       });
 
     event.preventDefault();

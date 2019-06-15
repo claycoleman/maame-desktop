@@ -3,6 +3,13 @@ import styles from './styles.css';
 import { CSSTransition } from 'react-transition-group';
 import { MdClear, MdInfoOutline, MdCheck } from 'react-icons/lib/md';
 
+export const ICON_STATES = {
+  LOADING: 'loading',
+  SUCCESS: 'success',
+  ERROR: 'error',
+  ALERT: 'alert',
+};
+
 export default class IconModal extends React.Component {
   constructor(props) {
     super(props);
@@ -27,22 +34,22 @@ export default class IconModal extends React.Component {
     const { previouslyLoading, exitTimeoutStarted } = this.state;
     let icon;
     switch (this.props.icon) {
-      case 'loading':
+      case ICON_STATES.LOADING:
         // TODO add loading spinner
         icon = <MdClear className="icon" color="white" size={90} />;
         break;
-      case 'error':
+      case ICON_STATES.ERROR:
         icon = <MdClear className="icon" color="white" size={90} />;
         break;
-      case 'alert':
+      case ICON_STATES.ALERT:
         icon = <MdInfoOutline className="icon" color="white" size={90} />;
         break;
-      case 'success':
+      case ICON_STATES.SUCCESS:
       default:
         icon = <MdCheck className="icon" color="white" size={90} />;
         break;
     }
-    if (this.props.icon !== 'loading' && previouslyLoading && !exitTimeoutStarted) {
+    if (this.props.icon !== ICON_STATES.LOADING && previouslyLoading && !exitTimeoutStarted) {
       // icon switched away from loading, and we haven't started the timeout yet
       this.startExitTimeout();
     }
@@ -60,7 +67,7 @@ export default class IconModal extends React.Component {
           exitActive: styles.modalExitActive,
         }}
         onEntered={() => {
-          if (this.props.icon === 'loading') {
+          if (this.props.icon === ICON_STATES.LOADING) {
             // don't exit if loading
             this.setState({ previouslyLoading: true });
           } else {
