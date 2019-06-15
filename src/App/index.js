@@ -16,6 +16,7 @@ import AdminPage from '../pages/AdminPage';
 TODO installs  
 react-router-dom
 firebase
+recompose
 */
 
 const App = () => (
