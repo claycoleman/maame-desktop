@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { validateEmail } from '../../modules/helpers';
+import IconModal from '../../components/IconModal';
 
 const PasswordForgetPage = () => (
   <div>
