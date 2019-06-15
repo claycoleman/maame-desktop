@@ -8,6 +8,7 @@ const _SignOutButton = ({ firebase }) => (
   </button>
 );
 
+// so VS Code can auto import
 const SignOutButton = withFirebase(_SignOutButton);
 
 export default SignOutButton;
