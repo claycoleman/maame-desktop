@@ -5,11 +5,13 @@ import { compose } from 'recompose';
 import { RegisterLink } from '../RegisterPage';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
+import { PasswordForgetLink } from '../PasswordForgetPage';
 
 const LoginPage = () => (
   <div>
     <h1>Log In</h1>
     <LoginForm />
+    <PasswordForgetLink />
     <RegisterLink />
   </div>
 );
@@ -82,7 +84,6 @@ const LoginForm = compose(
   withRouter,
   withFirebase,
 )(_LoginForm);
-
 
 const LoginLink = () => (
   <p>
