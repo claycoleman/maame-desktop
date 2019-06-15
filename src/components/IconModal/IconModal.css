@@ -1,0 +1,69 @@
+.modal {
+  transform: translateX(-50%) translateY(-50%);
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  height: 150px;
+  width: 150px;
+  background-color: rgba(0,0,0,0.785);
+  border-radius: 6px;    
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.modalIconBox {
+  display: flex;
+  flex-direction: column; 
+}
+
+.modalEnter {
+  opacity: 0.01;
+  transform: translateX(-50%) translateY(-50%) scale(0.9);
+}
+.modalEnterActive {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-50%) scale(1);
+  transition: all 250ms ease-out;
+}
+.modalExit {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-50%) scale(1);
+}
+.modalExitActive {
+  opacity: 0.01;
+  transform: translateX(-50%) translateY(-50%) scale(0.25);
+  transition: all 150ms ease-in;
+}
+
+.icon {
+  display: inline-block;
+  transform: scale(1);
+}
+.iconEnter {
+  opacity: 0.01;
+  transform: scale(0.75);
+}
+.iconEnterActive {
+  opacity: 1;
+  transform: scale(1);
+  transition: all 175ms ease-in-out;
+}
+.iconExit {
+  opacity: 1;
+  transform: scale(1);
+}
+.iconExitActive {
+  opacity: 0;
+  transform: scale(0.25);
+  transition: all 150ms ease-in;
+}
+
+.modalText {
+  color: white;
+  font-size: 16px;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-weight: 300;
+}
