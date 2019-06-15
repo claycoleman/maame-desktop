@@ -18,6 +18,8 @@ TODO installs
 react-router-dom
 firebase
 recompose
+react-transition-group
+react-icons
 */
 
 class App extends Component {
