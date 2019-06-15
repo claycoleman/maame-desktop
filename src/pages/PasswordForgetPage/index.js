@@ -42,12 +42,12 @@ class _PasswordForgetForm extends Component {
       .then(() => {
         this.setState({
           ...INITIAL_STATE,
-          modalText: 'Password Changed!',
+          modalText: 'Reset password sent!',
           modalIcon: 'success',
         });
       })
       .catch(error => {
-        this.setState({ error, modalText: 'Password Change Failed...', modalIcon: 'error' });
+        this.setState({ error, modalText: 'Uh oh...', modalIcon: 'error' });
       });
 
     event.preventDefault();
