@@ -5,11 +5,13 @@ import { compose } from 'recompose';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { validateEmail } from '../../modules/helpers';
+import { LoginLink } from '../LoginPage';
 
 const RegisterPage = () => (
   <div>
     <h1>Sign Up</h1>
     <RegisterForm />
+    <LoginLink />
   </div>
 );
 
