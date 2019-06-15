@@ -12,6 +12,12 @@ import HomePage from '../pages/HomePage';
 import AccountPage from '../pages/AccountPage';
 import AdminPage from '../pages/AdminPage';
 
+/*
+TODO installs  
+react-router-dom
+firebase
+*/
+
 const App = () => (
   <Router>
     <div>
