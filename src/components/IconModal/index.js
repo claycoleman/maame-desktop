@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './IconModal.css';
+import styles from './styles.css';
 import { CSSTransition } from 'react-transition-group';
 import { MdClear, MdInfoOutline, MdCheck } from 'react-icons/lib/md';
 
