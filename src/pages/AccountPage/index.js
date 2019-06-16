@@ -8,7 +8,7 @@ import BasePage from '..';
 
 const AccountPageBase = ({ authUser }) =>
   BasePage(
-    'Account Page',
+    'Your Account',
     <>
       <p>Account: {authUser.email}</p>
       <hr />

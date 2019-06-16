@@ -1,11 +1,15 @@
 import React from 'react';
 
 import { withAdminAuthorization } from '../../components/Session';
+import BasePage from '..';
 
-const AdminPage = () => (
-  <div>
-    <h1>AdminPage</h1>
-  </div>
-);
+const AdminPage = () =>
+  BasePage(
+    'Admin View',
+    <>
+      <h3>Add users to organizations here?</h3>
+      <h3>Make users admins here?</h3>
+    </>,
+  );
 
 export default withAdminAuthorization(AdminPage);
