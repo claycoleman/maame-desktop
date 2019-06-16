@@ -1,5 +1,5 @@
 import React from 'react';
-import { withBasicAuthorization } from '../../components/Session';
+import { withOrganizationAuthorization } from '../../components/Session';
 
 const HomePage = () => (
   <div>
@@ -7,4 +7,4 @@ const HomePage = () => (
   </div>
 );
 
-export default withBasicAuthorization(HomePage);
+export default withOrganizationAuthorization(HomePage);

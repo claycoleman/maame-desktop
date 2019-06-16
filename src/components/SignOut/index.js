@@ -1,11 +1,12 @@
 import React from 'react';
 
 import { withFirebase } from '../Firebase';
+import styles from '../Navigation/Navigation.module.css'
 
 const _SignOutButton = ({ firebase }) => (
-  <button type="button" onClick={firebase.doSignOut}>
+  <div className={styles.navLink} onClick={firebase.doSignOut}>
     Sign Out
-  </button>
+  </div>
 );
 
 // so VS Code can auto import

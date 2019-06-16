@@ -1,13 +1,11 @@
 import React from 'react';
 import styles from './LandingPage.module.css';
 
-// SETUP TODO customize landing page
-
 const LandingPage = () => (
   <div>
     <span className={styles.bannerImg}>
       <div className={styles.centerInfo}>
-        <h1>Landing</h1>
+        <h1>MAAME</h1>
         <h3>Maternal Health Management for Developing Nations</h3>
       </div>
     </span>

@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 
 import { PasswordForgetForm } from '../PasswordForgetPage';
 import PasswordChangeForm from '../../components/PasswordChange';
-import { withAuthentication, withBasicAuthorization } from '../../components/Session';
+import { withAuthentication, withOrganizationAuthorization } from '../../components/Session';
 
 const AccountPageBase = ({ authUser }) => (
   <div>
@@ -15,7 +15,7 @@ const AccountPageBase = ({ authUser }) => (
 );
 
 const AccountPage = compose(
-  withBasicAuthorization,
+  withOrganizationAuthorization,
   withAuthentication,
 )(AccountPageBase);
 

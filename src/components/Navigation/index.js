@@ -11,8 +11,6 @@ import styles from './Navigation.module.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 
-// SETUP TODO get colors right here
-
 const Navigation = ({ authUser }) => {
   console.log(authUser);
   return (
@@ -24,7 +22,7 @@ const Navigation = ({ authUser }) => {
           to={ROUTES.LANDING}
           active={window.location.pathname === ROUTES.LANDING}
         >
-          Landing
+          MAAME
         </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />

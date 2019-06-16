@@ -11,11 +11,9 @@ import PasswordForgetPage from '../pages/PasswordForgetPage';
 import HomePage from '../pages/HomePage';
 import AccountPage from '../pages/AccountPage';
 import AdminPage from '../pages/AdminPage';
-import { setupAuthentication } from '../components/Session';
+import NoOrganizationPage from '../pages/NoOrganizationPage';
 
-/*
-SETUP TODO => all SETUP TODOs should be completed and removed after copying
-*/
+import { setupAuthentication } from '../components/Session';
 
 class App extends Component {
   constructor(props) {
@@ -35,6 +33,8 @@ class App extends Component {
           <Route exact path={ROUTES.LOGIN} component={LoginPage} />
           <Route exact path={ROUTES.REGISTER} component={RegisterPage} />
           <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
+
+          <Route exact path={ROUTES.NO_ORGANIZATION} component={NoOrganizationPage} />
 
           <Route exact path={ROUTES.HOME} component={HomePage} />
           <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />

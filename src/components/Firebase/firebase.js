@@ -2,7 +2,6 @@ import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-// SETUP TODO make sure .env values are set up correctly
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -18,8 +17,6 @@ class Firebase {
 
     this.auth = app.auth();
     this.db = app.firestore();
-
-    // SETUP TODO insert app specific collections like users
 
     this.userCollectionRef = this.db.collection('users');
   }
@@ -38,10 +35,55 @@ class Firebase {
 
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
 
-  // SETUP TODO insert app specific functions like users
+  onAuthUserListener = (next, fallback) =>
+    this.auth.onAuthStateChanged(authUser => {
+      if (authUser) {
+        this.user(authUser.uid)
+          .get()
+          .then(snapshot => {
+            const dbUser = snapshot.data();
+
+            // default empty roles
+            if (!dbUser.roles) {
+              dbUser.roles = {};
+            }
+
+            // merge auth and db user
+            authUser = {
+              uid: authUser.uid,
+              email: authUser.email,
+              emailVerified: authUser.emailVerified,
+              providerData: authUser.providerData,
+              ...dbUser,
+            };
+
+            next(authUser);
+          });
+      } else {
+        fallback();
+      }
+    });
 
   user = uid => this.userCollectionRef.doc(uid);
+  // example: this.props.firebase.user(uid).get().then(snapshot => snapshot.data())
+
   users = () => this.userCollectionRef;
+  /*
+  example:
+  this.props.firebase.users().onSnapshot(snapshot => {
+        let users = [];
+
+        snapshot.forEach(doc =>
+          users.push({ ...doc.data(), uid: doc.id }),
+        );
+
+        this.setState({
+          users,
+          loading: false,
+        });
+      });
+
+  */
 }
 
 export default Firebase;
