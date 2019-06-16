@@ -15,13 +15,6 @@ import { setupAuthentication } from '../components/Session';
 
 /*
 SETUP TODO => all SETUP TODOs should be completed and removed after copying
-
-SETUP TODO installs  
-react-router-dom
-firebase
-recompose
-react-transition-group
-react-icons
 */
 
 class App extends Component {
@@ -37,7 +30,6 @@ class App extends Component {
       <Router>
         <div>
           <Navigation />
-          <hr />
 
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
           <Route exact path={ROUTES.LOGIN} component={LoginPage} />

@@ -1,7 +1,12 @@
 export const LANDING = '/';
-export const REGISTER = '/signup';
 export const LOGIN = '/signin';
-export const HOME = '/home';
+export const REGISTER = '/signup';
+export const ABOUT = '/about';
+
+export const NO_ORGANIZATION = '/no-organization';
+
+export const HOME = '/dashboard';
 export const ACCOUNT = '/account';
+
 export const ADMIN = '/admin';
 export const PASSWORD_FORGET = '/pw-forget';

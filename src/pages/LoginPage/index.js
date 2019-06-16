@@ -42,7 +42,6 @@ class _LoginForm extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({
-          ...INITIAL_STATE,
           modalText: 'Logged in!',
           modalIcon: ICON_STATES.SUCCESS,
         });
@@ -60,12 +59,16 @@ class _LoginForm extends Component {
 
   handleModalFinished = () => {
     // we should hide the modal after it's done
-    this.setState({ showModal: false }, () => {
+    this.setState({
+      ...INITIAL_STATE,
+      showModal: false,
+    });
+    setTimeout(() => {
       if (this.state.modalIcon === ICON_STATES.SUCCESS) {
         // redirect home
         this.props.history.push(ROUTES.HOME);
       }
-    });
+    }, 350);
   };
 
   render() {
@@ -95,7 +98,7 @@ class _LoginForm extends Component {
           type="password"
           placeholder="Password"
         />
-        <button disabled={isInvalid} type="submit">
+        <button disabled={isInvalid || showModal} type="submit">
           Sign In
         </button>
 

@@ -7,7 +7,8 @@ import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
 export const basicAuthCondition = authUser => !!authUser;
-export const adminAuthCondition = authUser => authUser && authUser.isAdmin;
+export const adminAuthCondition = authUser =>
+  !!authUser && authUser.isAdmin;
 
 const withAuthorization = condition => Component => {
   class WithAuthorization extends React.Component {

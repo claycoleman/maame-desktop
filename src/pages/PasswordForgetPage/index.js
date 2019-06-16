@@ -42,7 +42,6 @@ class _PasswordForgetForm extends Component {
       .doPasswordReset(email)
       .then(() => {
         this.setState({
-          ...INITIAL_STATE,
           modalText: 'Reset password sent!',
           modalIcon: ICON_STATES.SUCCESS,
         });
@@ -60,7 +59,10 @@ class _PasswordForgetForm extends Component {
 
   handleModalFinished = () => {
     // we should just hide the modal after it's done
-    this.setState({ showModal: false });
+    this.setState({
+      ...INITIAL_STATE,
+      showModal: false,
+    });
   };
 
   render() {
@@ -83,7 +85,7 @@ class _PasswordForgetForm extends Component {
           type="text"
           placeholder="Email Address"
         />
-        <button disabled={isInvalid} type="submit">
+        <button disabled={isInvalid || showModal} type="submit">
           Reset My Password
         </button>
 

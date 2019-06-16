@@ -42,10 +42,22 @@ class _RegisterForm extends Component {
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
-      // TODO add code to save name to user
+      .then(authUser => {
+        // Create a user in your Firebase realtime database
+        return this.props.firebase.user(authUser.user.uid).set(
+          {
+            id: authUser.uid,
+            userId: authUser.uid,
+            firstName,
+            lastName,
+            email,
+            isAdmin: false, // manually add admins in the Firebase console
+          },
+          { merge: true },
+        );
+      })
       .then(authUser => {
         this.setState({
-          ...INITIAL_STATE,
           modalText: 'Registered!',
           modalIcon: ICON_STATES.SUCCESS,
         });
@@ -59,12 +71,16 @@ class _RegisterForm extends Component {
 
   handleModalFinished = () => {
     // we should hide the modal after it's done
-    this.setState({ showModal: false }, () => {
+    this.setState({
+      ...INITIAL_STATE,
+      showModal: false,
+    });
+    setTimeout(() => {
       if (this.state.modalIcon === ICON_STATES.SUCCESS) {
         // redirect home
         this.props.history.push(ROUTES.HOME);
       }
-    });
+    }, 350);
   };
 
   onChange = event => {
@@ -133,7 +149,7 @@ class _RegisterForm extends Component {
           type="password"
           placeholder="Confirm Password"
         />
-        <button disabled={isInvalid} type="submit">
+        <button disabled={isInvalid || showModal} type="submit">
           Sign Up
         </button>
 

@@ -1,8 +1,26 @@
 import React from 'react';
+import styles from './LandingPage.module.css';
+
+// SETUP TODO customize landing page
 
 const LandingPage = () => (
   <div>
-    <h1>LandingPage</h1>
+    <span className={styles.bannerImg}>
+      <div className={styles.centerInfo}>
+        <h1>Landing</h1>
+        <h3>Maternal Health Management for Developing Nations</h3>
+      </div>
+    </span>
+    <span className={styles.textBlock}>
+      <p>
+        Maame is a tech organization dedicated to improved health outcomes for mothers in rural
+        areas of developing nations, such as Ghana and Uganda. We develop a maternal health app for
+        both the iOS and Android platforms which allows community health workers in rural regions to
+        keep track of patients and ensure they get the proper prenatal and postnatal visits during
+        their pregnancies.
+      </p>
+      {/* todo add more things here */}
+    </span>
   </div>
 );
 

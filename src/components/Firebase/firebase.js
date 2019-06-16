@@ -21,7 +21,7 @@ class Firebase {
 
     // SETUP TODO insert app specific collections like users
 
-    // TODO add example for users
+    this.userCollectionRef = this.db.collection('users');
   }
 
   // *** Auth API ***
@@ -40,7 +40,8 @@ class Firebase {
 
   // SETUP TODO insert app specific functions like users
 
-  // TODO add example for users
+  user = uid => this.userCollectionRef.doc(uid);
+  users = () => this.userCollectionRef;
 }
 
 export default Firebase;

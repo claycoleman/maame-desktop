@@ -3,6 +3,16 @@ import styles from './IconModal.module.css';
 import { CSSTransition } from 'react-transition-group';
 import { MdClear, MdInfoOutline, MdCheck } from 'react-icons/md';
 
+import { css } from '@emotion/core';
+// First way to import
+import { BounceLoader } from 'react-spinners';
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
+
 export const ICON_STATES = {
   LOADING: 'loading',
   SUCCESS: 'success',
@@ -35,8 +45,11 @@ export default class IconModal extends Component {
     let icon;
     switch (this.props.icon) {
       case ICON_STATES.LOADING:
-        // TODO add loading spinner
-        icon = <MdClear className="icon" color="white" size={90} />;
+        icon = (
+          <div style={{ paddingTop: 6 }}>
+            <BounceLoader css={override} sizeUnit={'px'} size={84} color={'white'} loading={true} />
+          </div>
+        );
         break;
       case ICON_STATES.ERROR:
         icon = <MdClear className="icon" color="white" size={90} />;
@@ -53,9 +66,6 @@ export default class IconModal extends Component {
       // icon switched away from loading, and we haven't started the timeout yet
       this.startExitTimeout();
     }
-
-    console.log(styles);
-    console.log(styles.modalEnter);
     return (
       <CSSTransition
         in={this.props.show}
