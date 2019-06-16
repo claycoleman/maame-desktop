@@ -2,6 +2,7 @@ export const LANDING = '/';
 export const LOGIN = '/signin';
 export const REGISTER = '/signup';
 export const ABOUT = '/about';
+export const DONATIONS = '/donations';
 
 export const NO_ORGANIZATION = '/no-organization';
 

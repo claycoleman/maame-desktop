@@ -4,7 +4,8 @@ import { withBasicAuthorization, organizationAuthCondition } from '../../compone
 // TODO on snapshot of the organizations, see if now an organization has them
 const NoOrganizationPage = () => (
   <div>
-    <h1>Home Page!</h1>
+    <h1>No Organization Page!</h1>
+    {/* TODO import the same page that we have in the app */}
   </div>
 );
 

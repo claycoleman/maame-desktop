@@ -47,6 +47,11 @@
   text-align: center;
 }
 
+.centerInfo h1 {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
 .centerInfo h1::after {
   content: '';
   height: 1px;

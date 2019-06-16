@@ -17,7 +17,7 @@ const LandingPage = () => (
         keep track of patients and ensure they get the proper prenatal and postnatal visits during
         their pregnancies.
       </p>
-      {/* todo add more things here */}
+      {/* TODO add more things here, like links to app and donations */}
     </span>
   </div>
 );

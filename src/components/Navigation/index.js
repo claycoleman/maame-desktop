@@ -25,9 +25,9 @@ const Navigation = ({ authUser }) => {
           MAAME
         </Link>
       </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: 12 }} />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
+        <Nav className="ml-auto">
           {authUser ? <NavigationAuth isAdmin={authUser.isAdmin} /> : <NavigationNonAuth />}
         </Nav>
       </Navbar.Collapse>
@@ -41,6 +41,7 @@ const NavigationAuth = ({ isAdmin }) => (
     <CustomNavLink route={ROUTES.ACCOUNT} text={'Account'} />
     {isAdmin && <CustomNavLink route={ROUTES.ADMIN} text={'Admin'} />}
     <SignOutButton />
+    <div style={{ marginRight: 24 }} />
   </>
 );
 
@@ -49,6 +50,7 @@ const NavigationNonAuth = ({}) => (
     <CustomNavLink route={ROUTES.LANDING} text={'Home'} />
     <CustomNavLink route={ROUTES.ABOUT} text={'About'} />
     <CustomNavLink route={ROUTES.LOGIN} text={'Sign In'} />
+    <div style={{ marginRight: 24 }} />
   </>
 );
 
