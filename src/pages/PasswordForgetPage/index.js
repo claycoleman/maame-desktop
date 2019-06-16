@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { validateEmail } from '../../modules/helpers';
 import IconModal, { ICON_STATES } from '../../components/IconModal';
+import BasePage from '..';
+import { LoginLink } from '../LoginPage';
 
-const PasswordForgetPage = () => (
-  <div>
-    <h1>PasswordForget</h1>
-    <PasswordForgetForm />
-  </div>
-);
+const PasswordForgetPage = () =>
+  BasePage(
+    'Forgot Your Password?',
+    <>
+      <PasswordForgetForm />
+      <hr />
+      <LoginLink customText="Back to Log In" />
+    </>,
+  );
 
 const INITIAL_STATE = {
   email: '',
@@ -71,26 +79,28 @@ class _PasswordForgetForm extends Component {
     const isInvalid = email === '' || !validateEmail(email);
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit}>
         <IconModal
           show={showModal}
           text={modalText}
           icon={modalIcon}
           onExit={this.handleModalFinished}
         />
-        <input
-          name="email"
-          value={this.state.email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <button disabled={isInvalid || showModal} type="submit">
-          Reset My Password
-        </button>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Email Address</Form.Label>
+          <Form.Control
+            name="email"
+            value={this.state.email}
+            onChange={this.onChange}
+            type="text"
+          />
+        </Form.Group>
+        <Button disabled={isInvalid || showModal} type="submit">
+          Reset Password
+        </Button>
 
         {error && <p>{error.message}</p>}
-      </form>
+      </Form>
     );
   }
 }

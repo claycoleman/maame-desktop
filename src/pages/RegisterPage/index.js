@@ -2,19 +2,26 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { validateEmail } from '../../modules/helpers';
 import { LoginLink } from '../LoginPage';
 import IconModal, { ICON_STATES } from '../../components/IconModal';
+import BasePage from '..';
+import { MODAL_TIMEOUT_LENGTH } from '../../constants/values';
 
-const RegisterPage = () => (
-  <div>
-    <h1>Sign Up</h1>
-    <RegisterForm />
-    <LoginLink />
-  </div>
-);
+const RegisterPage = () =>
+  BasePage(
+    'Sign Up',
+    <>
+      <RegisterForm />
+      <hr />
+      <LoginLink />
+    </>,
+  );
 
 const INITIAL_STATE = {
   firstName: '',
@@ -80,7 +87,7 @@ class _RegisterForm extends Component {
         // redirect home
         this.props.history.push(ROUTES.HOME);
       }
-    }, 350);
+    }, MODAL_TIMEOUT_LENGTH);
   };
 
   onChange = event => {
@@ -107,54 +114,64 @@ class _RegisterForm extends Component {
       !validateEmail(email) ||
       firstName === '';
     return (
-      <form onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit}>
         <IconModal
           show={showModal}
           text={modalText}
           icon={modalIcon}
           onExit={this.handleModalFinished}
         />
-        <input
-          name="firstName"
-          value={firstName}
-          onChange={this.onChange}
-          type="text"
-          placeholder="First Name"
-        />
-        <input
-          name="lastName"
-          value={lastName}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Last Name"
-        />
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <input
-          name="confirmPassword"
-          value={confirmPassword}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Confirm Password"
-        />
-        <button disabled={isInvalid || showModal} type="submit">
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>First Name</Form.Label>
+          <Form.Control
+            name="firstName"
+            value={firstName}
+            onChange={this.onChange}
+            type="text"
+          />
+        </Form.Group>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Last Name</Form.Label>
+          <Form.Control
+            name="lastName"
+            value={lastName}
+            onChange={this.onChange}
+            type="text"
+          />
+        </Form.Group>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Email Address</Form.Label>
+          <Form.Control
+            name="email"
+            value={email}
+            onChange={this.onChange}
+            type="text"
+          />
+        </Form.Group>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            name="password"
+            value={password}
+            onChange={this.onChange}
+            type="password"
+          />
+        </Form.Group>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={this.onChange}
+            type="text"
+          />
+        </Form.Group>
+        <Button disabled={isInvalid || showModal} type="submit">
           Sign Up
-        </button>
+        </Button>
 
         {error && <p>{error.message}</p>}
-      </form>
+      </Form>
     );
   }
 }

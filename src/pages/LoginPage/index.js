@@ -2,20 +2,27 @@ import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'recompose';
 
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 import { RegisterLink } from '../RegisterPage';
 import { withFirebase } from '../../components/Firebase';
 import * as ROUTES from '../../constants/routes';
 import { PasswordForgetLink } from '../PasswordForgetPage';
 import IconModal, { ICON_STATES } from '../../components/IconModal';
+import BasePage from '..';
+import { MODAL_TIMEOUT_LENGTH } from '../../constants/values';
 
-const LoginPage = () => (
-  <div>
-    <h1>Log In</h1>
-    <LoginForm />
-    <PasswordForgetLink />
-    <RegisterLink />
-  </div>
-);
+const LoginPage = () =>
+  BasePage(
+    'Log In',
+    <>
+      <LoginForm />
+      <hr />
+      <PasswordForgetLink />
+      <RegisterLink />
+    </>,
+  );
 
 const INITIAL_STATE = {
   email: '',
@@ -68,7 +75,7 @@ class _LoginForm extends Component {
         // redirect home
         this.props.history.push(ROUTES.HOME);
       }
-    }, 350);
+    }, MODAL_TIMEOUT_LENGTH);
   };
 
   render() {
@@ -77,33 +84,37 @@ class _LoginForm extends Component {
     const isInvalid = password === '' || email === '';
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <Form style={{ display: 'block' }} onSubmit={this.onSubmit}>
         <IconModal
           show={showModal}
           text={modalText}
           icon={modalIcon}
           onExit={this.handleModalFinished}
         />
-        <input
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          type="text"
-          placeholder="Email Address"
-        />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Password"
-        />
-        <button disabled={isInvalid || showModal} type="submit">
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            name="email"
+            value={email}
+            onChange={this.onChange}
+            type="text"
+          />
+        </Form.Group>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            name="password"
+            value={password}
+            onChange={this.onChange}
+            type="password"
+          />
+        </Form.Group>
+        <Button disabled={isInvalid || showModal} type="submit">
           Sign In
-        </button>
+        </Button>
 
         {error && <p>{error.message}</p>}
-      </form>
+      </Form>
     );
   }
 }
@@ -113,11 +124,16 @@ const LoginForm = compose(
   withFirebase,
 )(_LoginForm);
 
-const LoginLink = () => (
-  <p>
-    Already have an account? <Link to={ROUTES.LOGIN}>Log In</Link>
-  </p>
-);
+const LoginLink = ({ customText }) =>
+  customText ? (
+    <p>
+      <Link to={ROUTES.LOGIN}>{customText}</Link>
+    </p>
+  ) : (
+    <p>
+      Already have an account? <Link to={ROUTES.LOGIN}>Log In</Link>
+    </p>
+  );
 
 export default LoginPage;
 

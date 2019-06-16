@@ -46,20 +46,20 @@ export default class IconModal extends Component {
     switch (this.props.icon) {
       case ICON_STATES.LOADING:
         icon = (
-          <div style={{ paddingTop: 6 }}>
-            <BounceLoader css={override} sizeUnit={'px'} size={84} color={'white'} loading={true} />
+          <div style={{ paddingTop: 15 }}>
+            <BounceLoader css={override} sizeUnit={'px'} size={135} color={'white'} loading={true} />
           </div>
         );
         break;
       case ICON_STATES.ERROR:
-        icon = <MdClear className="icon" color="white" size={90} />;
+        icon = <MdClear className="icon" color="white" size={150} />;
         break;
       case ICON_STATES.ALERT:
-        icon = <MdInfoOutline className="icon" color="white" size={90} />;
+        icon = <MdInfoOutline className="icon" color="white" size={150} />;
         break;
       case ICON_STATES.SUCCESS:
       default:
-        icon = <MdCheck className="icon" color="white" size={90} />;
+        icon = <MdCheck className="icon" color="white" size={150} />;
         break;
     }
     if (this.props.icon !== ICON_STATES.LOADING && previouslyLoading && !exitTimeoutStarted) {

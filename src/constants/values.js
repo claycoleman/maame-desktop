@@ -1,0 +1,1 @@
+export const MODAL_TIMEOUT_LENGTH = 350;
