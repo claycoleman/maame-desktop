@@ -13,6 +13,7 @@ import AccountPage from '../pages/AccountPage';
 import AdminPage from '../pages/AdminPage';
 import NoOrganizationPage from '../pages/NoOrganizationPage';
 import DonationsPage from '../pages/DonationsPage';
+import AboutPage from '../pages/AboutPage';
 
 import { setupAuthentication } from '../components/Session';
 
@@ -35,6 +36,7 @@ class App extends Component {
           <Route exact path={ROUTES.REGISTER} component={RegisterPage} />
           <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
           <Route exact path={ROUTES.DONATIONS} component={DonationsPage} />
+          <Route exact path={ROUTES.ABOUT} component={AboutPage} />
 
           <Route exact path={ROUTES.NO_ORGANIZATION} component={NoOrganizationPage} />
 

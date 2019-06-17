@@ -49,6 +49,7 @@ const NavigationNonAuth = ({}) => (
   <>
     <CustomNavLink route={ROUTES.LANDING} text={'Home'} />
     <CustomNavLink route={ROUTES.ABOUT} text={'About'} />
+    <CustomNavLink route={ROUTES.DONATIONS} text={'Donate'} />
     <CustomNavLink route={ROUTES.LOGIN} text={'Sign In'} />
     <div style={{ marginRight: 24 }} />
   </>
