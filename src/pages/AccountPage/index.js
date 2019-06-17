@@ -4,15 +4,21 @@ import { compose } from 'recompose';
 import { PasswordForgetForm } from '../PasswordForgetPage';
 import PasswordChangeForm from '../../components/PasswordChange';
 import { withAuthentication, withOrganizationAuthorization } from '../../components/Session';
+import BasePage from '..';
 
-const AccountPageBase = ({ authUser }) => (
-  <div>
-    <h1>Account Page</h1>
-    <h2>Account: {authUser.email}</h2>
-    <PasswordForgetForm />
-    <PasswordChangeForm />
-  </div>
-);
+const AccountPageBase = ({ authUser }) =>
+  BasePage(
+    'Account Page',
+    <>
+      <p>Account: {authUser.email}</p>
+      <hr />
+      <h3>Reset Your Password</h3>
+      <PasswordForgetForm />
+      <hr />
+      <h3>Change Your Password</h3>
+      <PasswordChangeForm />
+    </>,
+  );
 
 const AccountPage = compose(
   withOrganizationAuthorization,

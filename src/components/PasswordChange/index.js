@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 import { withFirebase } from '../Firebase';
 import IconModal, { ICON_STATES } from '../IconModal';
 
@@ -59,32 +62,37 @@ class PasswordChangeForm extends Component {
     const isInvalid = password !== confirmPassword || password === '';
 
     return (
-      <form onSubmit={this.onSubmit}>
+      <Form onSubmit={this.onSubmit}>
         <IconModal
           show={showModal}
           text={modalText}
           icon={modalIcon}
           onExit={this.handleModalFinished}
         />
-        <input
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          type="password"
-          placeholder="New Password"
-        />
-        <input
-          name="confirmPassword"
-          value={confirmPassword}
-          onChange={this.onChange}
-          type="password"
-          placeholder="Confirm New Password"
-        />
-        <button disabled={isInvalid || showModal} type="submit">
-          Reset My Password
-        </button>
+        
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            name="password"
+            value={password}
+            onChange={this.onChange}
+            type="password"
+          />
+        </Form.Group>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={this.onChange}
+            type="password"
+          />
+        </Form.Group>
+        <Button disabled={isInvalid || showModal} type="submit">
+          Change Password
+        </Button>
         {error && <p>{error.message}</p>}
-      </form>
+      </Form>
     );
   }
 }

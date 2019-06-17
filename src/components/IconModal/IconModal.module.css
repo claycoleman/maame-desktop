@@ -3,8 +3,8 @@
   position: fixed;
   left: 50%;
   top: 50%;
-  height: 150px;
-  width: 150px;
+  height: 200px;
+  width: 200px;
   background-color: rgba(0,0,0,0.785);
   border-radius: 6px;    
   display: flex;
@@ -62,7 +62,7 @@
 
 .modalText {
   color: white;
-  font-size: 16px;
+  font-size: 20px;
   margin-top: 4px;
   margin-bottom: 8px;
   font-weight: 300;
