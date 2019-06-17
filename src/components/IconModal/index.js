@@ -47,7 +47,13 @@ export default class IconModal extends Component {
       case ICON_STATES.LOADING:
         icon = (
           <div style={{ paddingTop: 15 }}>
-            <BounceLoader css={override} sizeUnit={'px'} size={135} color={'white'} loading={true} />
+            <BounceLoader
+              css={override}
+              sizeUnit={'px'}
+              size={135}
+              color={'white'}
+              loading={true}
+            />
           </div>
         );
         break;

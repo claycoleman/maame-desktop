@@ -2,22 +2,25 @@ import React from 'react';
 import styles from './LandingPage.module.css';
 
 const LandingPage = () => (
-  <div>
+  <div className={styles.landingContainer}>
     <span className={styles.bannerImg}>
-      <div className={styles.centerInfo}>
-        <h1>MAAME</h1>
-        <h3>Maternal Health Management for Developing Nations</h3>
-      </div>
+      <h1 className={styles.newLocationText}>Maternal health tools for&nbsp;developing nations</h1>
     </span>
     <span className={styles.textBlock}>
+      <h2>Maame aims to reduce maternal mortality in rural communities</h2>
       <p>
-        Maame is a tech organization dedicated to improved health outcomes for mothers in rural
-        areas of developing nations, such as Ghana and Uganda. We develop a maternal health app for
-        both the iOS and Android platforms which allows community health workers in rural regions to
-        keep track of patients and ensure they get the proper prenatal and postnatal visits during
-        their pregnancies.
+        Our maternal health app for both the iOS and Android platforms allows community health
+        workers in rural regions to keep track of patients and ensure they get the proper prenatal
+        and postnatal visits during their pregnancies.
       </p>
-      {/* TODO add more things here, like links to app and donations */}
+    </span>
+    <span className={styles.textBlock}>
+      <h2>Our Team</h2>
+      <p>Add team info and photos darker background</p>
+    </span>
+    <span className={styles.textBlock}>
+      <h2>Our Partners</h2>
+      <p>Pics Asia made with those partners</p>
     </span>
   </div>
 );

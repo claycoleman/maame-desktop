@@ -1,14 +1,20 @@
+.landingContainer {
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .bannerImg {
   position: relative;
   left: 0;
   top: 0;
-  height: calc(100vh - 60px);
+  height: calc(65vh - 60px);
   width: 100vw;
-  background-image: url(../../assets/images/women.jpg);
-  background-position: center;
+  max-width: 100%;
+  background-image: url(../../assets/images/woman.png);
+  background-position: right;
   background-size: cover;
   background-repeat: no-repeat;
-  max-width: 100%;
   vertical-align: middle;
   border: 0;
   display: block;
@@ -17,18 +23,25 @@
 
 .textBlock {
   position: relative;
-  min-height: 300px;
   display: flex;
-  align-items: center;
-  padding: 36px;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px;
   width: 100vw;
   max-width: 100%;
   border: 0;
+  box-sizing: border-box;
+}
+
+.textBlock h2 {
+  font-size: 32px;
+  color: black;
 }
 
 .textBlock p {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
+  color: rgb(51, 51, 51);
 }
 
 .centerInfo {
@@ -59,4 +72,40 @@
   background-color: white;
   display: block;
   margin: 12px;
+}
+
+.newLocationText {
+  font-size: 52px;
+  padding: 40px;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  max-width: 800px;
+}
+
+@media (min-width: 900px) {
+  .textBlock {
+    padding-left: 86px;
+    padding-right: 86px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .bannerImg {
+    background-image: url(../../assets/images/woman-less-narrow.png);
+  }
+}
+
+@media (max-width: 1200px) {
+  .bannerImg {
+    background-image: url(../../assets/images/woman-narrow.png);
+  }
+}
+
+@media (max-width: 768px) {
+  .newLocationText {
+    padding: 10px;
+    max-width: 100%;
+    font-size: 48px;
+  }
 }

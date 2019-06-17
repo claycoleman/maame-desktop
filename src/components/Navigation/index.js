@@ -17,12 +17,18 @@ const Navigation = ({ authUser }) => {
     <Navbar bg="light" expand="sm" className={styles.navbar}>
       <Navbar.Brand className={styles.navBrand}>
         <Link
-          style={{ color: 'white', textDecoration: 'none' }}
+          style={{
+            color: 'white',
+            textDecoration: 'none',
+            fontWeight: 'bold',
+            fontFamily: 'Open Sans',
+            textTransform: 'uppercase',
+          }}
           href={ROUTES.LANDING}
           to={ROUTES.LANDING}
           active={window.location.pathname === ROUTES.LANDING}
         >
-          MAAME
+          Maame
         </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: 12 }} />
