@@ -1,0 +1,137 @@
+
+.bannerImg {
+  position: relative;
+  left: 0;
+  top: 0;
+  height: calc(100vh - 60px);
+  width: 100vw;
+  background-image: url(../../assets/images/main.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  max-width: 100%;
+  vertical-align: middle;
+  border: 0;
+  display: block;
+  padding: 16px;
+}
+
+.textBlock {
+  position: relative;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  padding: 36px;
+  width: 80%;
+  margin-left: 10%;
+  border: 0;
+}
+
+.textBlock p {
+  margin: 0;
+  font-size: 20px;
+}
+
+.centerInfo {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  max-width: 500px;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.centerInfo * {
+  color: white;
+  text-align: center;
+}
+
+.centerInfo h1 {
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.centerInfo h1::after {
+  content: '';
+  height: 1px;
+  width: calc(100% - 24px);
+  background-color: white;
+  display: block;
+  margin: 12px;
+}
+
+.mainSection {
+  width: 70%;
+  margin-left: 15%;
+  font-size: 20px;
+  margin-bottom: 15px;
+  clear: both;
+  float: none;
+}
+
+.left {
+  width: 35%;
+  float: left;
+  margin-left: 5%;
+  clear: none;
+  height: 20%;
+  vertical-align: middle;
+}
+
+.right {
+  width: 50%;
+  float: right;
+  margin-right: 5%;
+  clear: none;
+  vertical-align: middle;
+}
+
+.clear {
+  clear: both;
+  float: none;
+  height: 20px;
+}
+
+.button {
+  padding: 10px 50px;
+  background-color: #CC0000;
+  border: solid #CC0000 2px;
+  margin-top: 15px;
+  color: #ffffff;
+}
+
+h2 {
+  font-family: impact, helvetica, sans-serif;
+  color: black;
+  letter-spacing: .12em;
+}
+
+.links {
+  clear: both;
+  margin-top: 15px;
+  height: 100px;
+  float: none;
+  margin-left: 5%;
+}
+
+.links a {
+  text-align: center;
+  margin: 15px 4%;
+  float: left;
+  width: 30%;
+  margin: 0 .5%;
+}
+
+.links img {
+  height: 35px;
+  margin: 0 7.5px;
+}
+
+.links a:hover {
+  text-decoration: none;
+  color: #CC0000;
+  background-color: white;
+}
+  
