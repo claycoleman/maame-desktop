@@ -39,3 +39,9 @@ export const FlowBodyItemType = {
   // minDate: 'November 8, 1918'
   // maxDate: 'November 8, 2018'
 };
+
+export const CONTAINER_WIDTHS = {
+  NORMAL: 1,
+  WIDE: 2,
+  FLUID: 3,
+}

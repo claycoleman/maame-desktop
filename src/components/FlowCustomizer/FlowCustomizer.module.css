@@ -1,0 +1,15 @@
+.screens {
+  display: block;
+}
+
+.screenItem {
+  padding: 10px 20px;
+  margin: 8px;
+  transition: background-color 0.4s cubic-bezier(0.15, 0.9, 0.34, 0.95);
+  cursor: pointer;
+  user-select: none;
+}
+
+.screenItem:hover {
+  background-color: rgba(51, 51, 51, 0.4);
+}

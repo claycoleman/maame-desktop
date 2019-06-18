@@ -101,37 +101,3 @@
   margin-top: 15px;
   color: #ffffff;
 }
-
-h2 {
-  font-family: impact, helvetica, sans-serif;
-  color: black;
-  letter-spacing: .12em;
-}
-
-.links {
-  clear: both;
-  margin-top: 15px;
-  height: 100px;
-  float: none;
-  margin-left: 5%;
-}
-
-.links a {
-  text-align: center;
-  margin: 15px 4%;
-  float: left;
-  width: 30%;
-  margin: 0 .5%;
-}
-
-.links img {
-  height: 35px;
-  margin: 0 7.5px;
-}
-
-.links a:hover {
-  text-decoration: none;
-  color: #CC0000;
-  background-color: white;
-}
-  

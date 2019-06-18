@@ -12,32 +12,34 @@ import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 
 const Navigation = ({ authUser }) => {
-  console.log(authUser);
   return (
-    <Navbar bg="light" expand="sm" className={styles.navbar}>
-      <Navbar.Brand className={styles.navBrand}>
-        <Link
-          style={{
-            color: 'white',
-            textDecoration: 'none',
-            fontWeight: 'bold',
-            fontFamily: 'Open Sans',
-            textTransform: 'uppercase',
-          }}
-          href={ROUTES.LANDING}
-          to={ROUTES.LANDING}
-          active={window.location.pathname === ROUTES.LANDING}
-        >
-          Maame
-        </Link>
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: 12 }} />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ml-auto">
-          {authUser ? <NavigationAuth isAdmin={authUser.isAdmin} /> : <NavigationNonAuth />}
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
+    <div style={{ width: '100vw', backgroundColor: '#F8F9FA' }}>
+      <Navbar bg="light" expand="sm" className={styles.navbar}>
+        <Navbar.Brand className={styles.navBrand}>
+          <Link
+            style={{
+              color: 'white',
+              textDecoration: 'none',
+              fontWeight: 'bold',
+              fontFamily: 'Open Sans',
+              textTransform: 'uppercase',
+            }}
+            href={ROUTES.LANDING}
+            to={ROUTES.LANDING}
+            active={window.location.pathname === ROUTES.LANDING}
+          >
+            Maame
+          </Link>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: 12 }} />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ml-auto">
+            {authUser ? <NavigationAuth isAdmin={authUser.isAdmin} /> : <NavigationNonAuth />}
+            {/* <div style={{ marginRight: 24 }} />  */}
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+    </div>
   );
 };
 
@@ -47,17 +49,15 @@ const NavigationAuth = ({ isAdmin }) => (
     <CustomNavLink route={ROUTES.ACCOUNT} text={'Account'} />
     {isAdmin && <CustomNavLink route={ROUTES.ADMIN} text={'Admin'} />}
     <SignOutButton />
-    <div style={{ marginRight: 24 }} />
   </>
 );
 
-const NavigationNonAuth = ({}) => (
+const NavigationNonAuth = () => (
   <>
     <CustomNavLink route={ROUTES.LANDING} text={'Home'} />
-    <CustomNavLink route={ROUTES.ABOUT} text={'About'} />
+    {/* <CustomNavLink route={ROUTES.ABOUT} text={'About'} /> */}
     <CustomNavLink route={ROUTES.DONATIONS} text={'Donate'} />
     <CustomNavLink route={ROUTES.LOGIN} text={'Sign In'} />
-    <div style={{ marginRight: 24 }} />
   </>
 );
 

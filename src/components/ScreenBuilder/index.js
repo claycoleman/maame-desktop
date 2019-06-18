@@ -4,8 +4,6 @@ import { FlowBodyItemType } from '../../constants/values';
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
-import { stateToHTML } from 'draft-js-export-html';
-
 import CustomEditor from '../CustomEditor';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -68,7 +66,7 @@ const getListStyle = isDraggingOver => ({
 
 // save to localStorage
 
-export default class FlowBuilder extends Component {
+export default class ScreenBuilder extends Component {
   constructor(props) {
     super(props);
 
@@ -140,9 +138,9 @@ export default class FlowBuilder extends Component {
       switch (event.code) {
         case 'ArrowUp':
           // go up
-          if (this.state.currentlyEditing == 'title') {
+          if (this.state.currentlyEditing === 'title') {
             // do nothing
-          } else if (this.state.currentlyEditing == 0) {
+          } else if (this.state.currentlyEditing === 0) {
             this.setState({ currentlyEditing: 'title' });
           } else {
             this.setState({ currentlyEditing: this.state.currentlyEditing - 1 });
@@ -150,7 +148,7 @@ export default class FlowBuilder extends Component {
           break;
         case 'ArrowDown':
           // go down
-          if (this.state.currentlyEditing == 'title') {
+          if (this.state.currentlyEditing === 'title') {
             if (this.state.pages[this.state.currentPage].components.length >= 1) {
               this.setState({ currentlyEditing: 0 });
             }
@@ -212,7 +210,7 @@ export default class FlowBuilder extends Component {
 
   importPages = event => {
     const pageText = ''; // TODO find a way to import better
-    this.setState({ pages: JSON.parse(pageText), currentlyEditing: 'title', currentPage: 0, });
+    this.setState({ pages: JSON.parse(pageText), currentlyEditing: 'title', currentPage: 0 });
   };
 
   changeCurrentComponentType = newComponentType => {
@@ -282,7 +280,7 @@ export default class FlowBuilder extends Component {
   };
 
   removePage = () => {
-    if (this.state.pages.length == 1) {
+    if (this.state.pages.length === 1) {
       alert("You can't delete the only page of a flow.");
       return;
     }
@@ -325,6 +323,8 @@ export default class FlowBuilder extends Component {
           name: 'Bool Input',
         };
         break;
+      default:
+        break;
     }
 
     newComponent.id = guidGenerator();
@@ -340,7 +340,7 @@ export default class FlowBuilder extends Component {
   };
 
   removeComponent = () => {
-    if (this.state.currentlyEditing == 'title') {
+    if (this.state.currentlyEditing === 'title') {
       return;
     }
     if (window.confirm("Are you sure you want to remove this component? This can't be undone.")) {
@@ -373,13 +373,13 @@ export default class FlowBuilder extends Component {
     const currentPageObject = pages[currentPage];
 
     let components = currentPageObject.components;
-    if (currentlyEditing != 'title') {
+    if (currentlyEditing !== 'title') {
       components[currentlyEditing].focus = true;
     }
 
     components = reorder(components, result.source.index, result.destination.index);
 
-    if (currentlyEditing != 'title') {
+    if (currentlyEditing !== 'title') {
       newCurrentlyEditing = components.findIndex(component => component.focus);
       console.log(components[newCurrentlyEditing]);
       delete components[newCurrentlyEditing].focus;
@@ -461,6 +461,8 @@ export default class FlowBuilder extends Component {
               <input type="checkbox" />
             </div>
           );
+          break;
+        default:
           break;
       }
       return body;
@@ -569,6 +571,8 @@ export default class FlowBuilder extends Component {
             </div>,
           );
           break;
+        default:
+          break;
       }
     }
     return <div className="prettyForm">{editBody}</div>;
@@ -609,7 +613,7 @@ export default class FlowBuilder extends Component {
                 <div style={{ background: 'white', height: 40, marginBottom: 16 }}>
                   <p>
                     <b>Current Page:</b> {page.title}{' '}
-                    {page.title == defaultNewPage().title && '(#' + (index + 1) + ')'}
+                    {page.title === defaultNewPage().title && '(#' + (index + 1) + ')'}
                   </p>
                 </div>
               );
@@ -653,7 +657,7 @@ export default class FlowBuilder extends Component {
           <div className="edit">
             <h2>Editing</h2>
             {this.renderCurrentlyEditing(currentlyEditing, currentPageObject)}
-            {this.state.currentlyEditing != 'title' && (
+            {this.state.currentlyEditing !== 'title' && (
               <div className="addRowButton standaloneButton danger" onClick={this.removeComponent}>
                 – Remove Component
               </div>

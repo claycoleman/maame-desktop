@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
 import LandingPage from '../pages/LandingPage';
@@ -12,11 +12,15 @@ import HomePage from '../pages/HomePage';
 import AccountPage from '../pages/AccountPage';
 import AdminPage from '../pages/AdminPage';
 import NoOrganizationPage from '../pages/NoOrganizationPage';
-import DonationsPage from '../pages/DonationsPage';
-import FlowBuilderPage from '../pages/FlowBuilderPage';
-import AboutPage from '../pages/AboutPage';
+
+// import DonationsPage from '../pages/DonationsPage';
+// import AboutPage from '../pages/AboutPage';
+
+import FlowCustomizerPage from '../pages/FlowCustomizerPage';
+import ScreenBuilderPage from '../pages/ScreenBuilderPage';
 
 import { setupAuthentication } from '../components/Session';
+import LostPage from '../pages/LostPage';
 
 class App extends Component {
   constructor(props) {
@@ -33,24 +37,30 @@ class App extends Component {
           <Navigation />
 
           {/* PUBLIC PAGES */}
-          <Route exact path={ROUTES.LANDING} component={LandingPage} />
-          <Route exact path={ROUTES.LOGIN} component={LoginPage} />
-          <Route exact path={ROUTES.REGISTER} component={RegisterPage} />
-          <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
-          <Route exact path={ROUTES.DONATIONS} component={DonationsPage} />
-          <Route exact path={ROUTES.ABOUT} component={AboutPage} />
+          <Switch>
+            <Route exact path={ROUTES.LANDING} component={LandingPage} />
+            <Route exact path={ROUTES.LOGIN} component={LoginPage} />
+            <Route exact path={ROUTES.REGISTER} component={RegisterPage} />
+            <Route exact path={ROUTES.PASSWORD_FORGET} component={PasswordForgetPage} />
 
-          {/* NO ORG PAGES */}
-          <Route exact path={ROUTES.NO_ORGANIZATION} component={NoOrganizationPage} />
+            {/* TODO maybe build donations <Route exact path={ROUTES.DONATIONS} component={DonationsPage} /> */}
+            {/* TODO maybe build about ? <Route exact path={ROUTES.ABOUT} component={AboutPage} /> */}
 
-          {/* AUTHED PAGES */}
-          <Route exact path={ROUTES.HOME} component={HomePage} />
-          <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
-          <Route exact path={ROUTES.FLOW_BUILDER} component={FlowBuilderPage} />
+            {/* NO ORG PAGES */}
+            <Route exact path={ROUTES.NO_ORGANIZATION} component={NoOrganizationPage} />
 
-          {/* ADMIN PAGES */}
-          <Route exact path={ROUTES.ADMIN} component={AdminPage} />
+            {/* AUTHED PAGES */}
+            <Route exact path={ROUTES.HOME} component={HomePage} />
+            <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
 
+            <Route exact path={ROUTES.FLOW_CUSTOMIZER} component={FlowCustomizerPage} />
+            <Route exact path={ROUTES.SCREEN_BUILDER} component={ScreenBuilderPage} />
+
+            {/* ADMIN PAGES */}
+            <Route exact path={ROUTES.ADMIN} component={AdminPage} />
+
+            <Route component={LostPage} />
+          </Switch>
         </div>
       </Router>
     );

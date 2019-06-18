@@ -19,6 +19,7 @@ class Firebase {
     this.db = app.firestore();
 
     this.userCollectionRef = this.db.collection('users');
+    this.topLevelOrganizationCollectionRef = this.db.collection('top-level-organizations');
   }
 
   // *** Auth API ***
@@ -66,7 +67,7 @@ class Firebase {
 
   user = uid => this.userCollectionRef.doc(uid);
   // example: this.props.firebase.user(uid).get().then(snapshot => snapshot.data())
-
+  
   users = () => this.userCollectionRef;
   /*
   example:
@@ -84,6 +85,9 @@ class Firebase {
       });
 
   */
+ topLevelOrganization = id => this.topLevelOrganizationCollectionRef.doc(id);
+ topLevelOrganizations = () => this.topLevelOrganizationCollectionRef;
+
 }
 
 export default Firebase;

@@ -3,10 +3,10 @@
   margin-right: 0px;
   /* text-transform: uppercase; */
   text-align: center;
-  font-size: 20px;
-  letter-spacing: 1px;
+  font-size: 24px;
+  letter-spacing: 2px;
   font-weight: bold;
-  padding: 4px 16px;
+  padding: 4px 23px;
   background-color: #cc0000;
   color: white;
   font-size: 32px;
@@ -24,16 +24,19 @@
   padding: 0;
 }
 
-
 .navbar {
   padding: 0px;
   min-height: 60px;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 nav {
   display: block;
   width: 100%;
 }
+
 nav ul {
   display: flex;
   justify-content: center;
@@ -58,10 +61,12 @@ nav ul {
   white-space: nowrap;
   color: darkslategray;
 }
+
 .navLink.active {
   background-color: rgba(204, 0, 0, 0.2);
   color: black;
 }
+
 nav a {
   color: darkslategray;
   filter: brightness(100%) !important;
@@ -73,9 +78,11 @@ nav a {
   justify-content: center;
   padding: 0px 16px !important;
 }
+
 .navLink:hover {
   background-color: rgba(204, 0, 0, 0.4) !important;
 }
+
 nav a:after {
   content: none;
 }

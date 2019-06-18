@@ -1,8 +1,4 @@
 import React, { Component } from 'react';
-import { FlowBodyItemType } from '../../constants/values';
-
-import Dropdown from 'react-dropdown';
-import 'react-dropdown/style.css';
 
 import { Editor, EditorState, RichUtils, getDefaultKeyBinding, SelectionState } from 'draft-js';
 import { stateToHTML } from 'draft-js-export-html';
