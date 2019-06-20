@@ -36,6 +36,10 @@ export default class IconModal extends Component {
       setTimeout(() => {
         // if hideModal is provided, just hide the modal; else,
         this.props.onExit(this.props.onExitParams);
+        this.setState({
+          previouslyLoading: false,
+          exitTimeoutStarted: false,
+        });
       }, 1250);
     });
   };
@@ -68,9 +72,10 @@ export default class IconModal extends Component {
         icon = <MdCheck className="icon" color="white" size={150} />;
         break;
     }
+    // TODO where is the real place to do this?? props did update or something? => useEffect is the right place actually
     if (this.props.icon !== ICON_STATES.LOADING && previouslyLoading && !exitTimeoutStarted) {
       // icon switched away from loading, and we haven't started the timeout yet
-      this.startExitTimeout();
+      setTimeout(() => this.startExitTimeout(), 0);
     }
     return (
       <CSSTransition

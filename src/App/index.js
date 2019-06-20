@@ -59,6 +59,7 @@ class App extends Component {
             {/* ADMIN PAGES */}
             <Route exact path={ROUTES.ADMIN} component={AdminPage} />
 
+            <Route exact path={ROUTES.LOST} component={LostPage} />
             <Route component={LostPage} />
           </Switch>
         </div>

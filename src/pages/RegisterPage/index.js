@@ -15,7 +15,7 @@ import { MODAL_TIMEOUT_LENGTH } from '../../constants/values';
 
 const RegisterPage = () =>
   BasePage(
-    'Sign Up',
+    'Portal Sign Up',
     <>
       <RegisterForm />
       <hr />
@@ -50,14 +50,17 @@ class _RegisterForm extends Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
+        console.log(authUser);
+        console.log(authUser.user);
         // Create a user in your Firebase realtime database
         return this.props.firebase.user(authUser.user.uid).set(
           {
-            id: authUser.uid,
-            userId: authUser.uid,
+            id: authUser.user.uid,
+            userId: authUser.user.uid,
             firstName,
             lastName,
             email,
+            organizationId: null,
             isAdmin: false, // manually add admins in the Firebase console
           },
           { merge: true },
@@ -78,12 +81,13 @@ class _RegisterForm extends Component {
 
   handleModalFinished = () => {
     // we should hide the modal after it's done
+    const wasSucccessful = this.state.modalIcon === ICON_STATES.SUCCESS;
     this.setState({
-      ...INITIAL_STATE,
+      ...(wasSucccessful ? INITIAL_STATE : {}),
       showModal: false,
     });
     setTimeout(() => {
-      if (this.state.modalIcon === ICON_STATES.SUCCESS) {
+      if (wasSucccessful) {
         // redirect home
         this.props.history.push(ROUTES.HOME);
       }
@@ -123,39 +127,19 @@ class _RegisterForm extends Component {
         />
         <Form.Group style={{ textAlign: 'left' }}>
           <Form.Label>First Name</Form.Label>
-          <Form.Control
-            name="firstName"
-            value={firstName}
-            onChange={this.onChange}
-            type="text"
-          />
+          <Form.Control name="firstName" value={firstName} onChange={this.onChange} type="text" />
         </Form.Group>
         <Form.Group style={{ textAlign: 'left' }}>
           <Form.Label>Last Name</Form.Label>
-          <Form.Control
-            name="lastName"
-            value={lastName}
-            onChange={this.onChange}
-            type="text"
-          />
+          <Form.Control name="lastName" value={lastName} onChange={this.onChange} type="text" />
         </Form.Group>
         <Form.Group style={{ textAlign: 'left' }}>
           <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            name="email"
-            value={email}
-            onChange={this.onChange}
-            type="text"
-          />
+          <Form.Control name="email" value={email} onChange={this.onChange} type="text" />
         </Form.Group>
         <Form.Group style={{ textAlign: 'left' }}>
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            name="password"
-            value={password}
-            onChange={this.onChange}
-            type="password"
-          />
+          <Form.Control name="password" value={password} onChange={this.onChange} type="password" />
         </Form.Group>
         <Form.Group style={{ textAlign: 'left' }}>
           <Form.Label>Confirm Password</Form.Label>
@@ -163,14 +147,14 @@ class _RegisterForm extends Component {
             name="confirmPassword"
             value={confirmPassword}
             onChange={this.onChange}
-            type="text"
+            type="password"
           />
         </Form.Group>
         <Button disabled={isInvalid || showModal} type="submit">
           Sign Up
         </Button>
 
-        {error && <p>{error.message}</p>}
+        {error && <p style={{ marginTop: 16, color: 'firebrick' }}>{error.message}</p>}
       </Form>
     );
   }

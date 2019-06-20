@@ -34,13 +34,23 @@ const Navigation = ({ authUser }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ marginRight: 12 }} />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto">
-            {authUser ? <NavigationAuth isAdmin={authUser.isAdmin} /> : <NavigationNonAuth />}
+            {renderNavigationForAuthStatus(authUser)}
             {/* <div style={{ marginRight: 24 }} />  */}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
     </div>
   );
+};
+
+const renderNavigationForAuthStatus = authUser => {
+  if (!authUser) {
+    return <NavigationNoAuth />;
+  } else if (!authUser.organizationId) {
+    return <NavigationNoOrg />;
+  } else {
+    return <NavigationAuth isAdmin={authUser.isAdmin} />;
+  }
 };
 
 const NavigationAuth = ({ isAdmin }) => (
@@ -52,11 +62,18 @@ const NavigationAuth = ({ isAdmin }) => (
   </>
 );
 
-const NavigationNonAuth = () => (
+const NavigationNoOrg = () => (
+  <>
+    <CustomNavLink route={ROUTES.NO_ORGANIZATION} text={'No Organization'} />
+    <SignOutButton />
+  </>
+);
+
+const NavigationNoAuth = () => (
   <>
     <CustomNavLink route={ROUTES.LANDING} text={'Home'} />
     {/* <CustomNavLink route={ROUTES.ABOUT} text={'About'} /> */}
-    <CustomNavLink route={ROUTES.DONATIONS} text={'Donate'} />
+    {/* <CustomNavLink route={ROUTES.DONATIONS} text={'Donate'} /> */}
     <CustomNavLink route={ROUTES.LOGIN} text={'Sign In'} />
   </>
 );

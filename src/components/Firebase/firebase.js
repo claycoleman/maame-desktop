@@ -43,20 +43,22 @@ class Firebase {
           .get()
           .then(snapshot => {
             const dbUser = snapshot.data();
+            
+            if (dbUser) {
+              // default empty roles
+              if (!dbUser.roles) {
+                dbUser.roles = {};
+              }
 
-            // default empty roles
-            if (!dbUser.roles) {
-              dbUser.roles = {};
+              // merge auth and db user
+              authUser = {
+                uid: authUser.uid,
+                email: authUser.email,
+                emailVerified: authUser.emailVerified,
+                providerData: authUser.providerData,
+                ...dbUser,
+              };
             }
-
-            // merge auth and db user
-            authUser = {
-              uid: authUser.uid,
-              email: authUser.email,
-              emailVerified: authUser.emailVerified,
-              providerData: authUser.providerData,
-              ...dbUser,
-            };
 
             next(authUser);
           });
@@ -67,7 +69,7 @@ class Firebase {
 
   user = uid => this.userCollectionRef.doc(uid);
   // example: this.props.firebase.user(uid).get().then(snapshot => snapshot.data())
-  
+
   users = () => this.userCollectionRef;
   /*
   example:
@@ -85,9 +87,8 @@ class Firebase {
       });
 
   */
- topLevelOrganization = id => this.topLevelOrganizationCollectionRef.doc(id);
- topLevelOrganizations = () => this.topLevelOrganizationCollectionRef;
-
+  topLevelOrganization = id => this.topLevelOrganizationCollectionRef.doc(id);
+  topLevelOrganizations = () => this.topLevelOrganizationCollectionRef;
 }
 
 export default Firebase;

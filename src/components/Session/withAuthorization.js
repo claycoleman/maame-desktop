@@ -12,7 +12,7 @@ export const organizationAuthCondition = authUser =>
 export const adminAuthCondition = authUser =>
   organizationAuthCondition(authUser) && authUser.isAdmin;
 
-const withAuthorization = condition => Component => {
+const withAuthorization = (condition, fallbackRoute = ROUTES.LOGIN) => Component => {
   class WithAuthorization extends React.Component {
     componentDidMount() {
       // onAuthStateChanged should fire immediately after this method is called,
@@ -20,13 +20,14 @@ const withAuthorization = condition => Component => {
       // and also new navigations there
       this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
+          console.log(authUser);
           if (!condition(authUser)) {
-            this.props.history.push(ROUTES.LOGIN);
+            this.props.history.push(fallbackRoute);
           }
         },
         () => {
           if (!condition(null)) {
-            this.props.history.push(ROUTES.LOGIN);
+            this.props.history.push(fallbackRoute);
           }
         },
       );
@@ -54,7 +55,8 @@ const withAuthorization = condition => Component => {
 
 export const withBasicAuthorization = Component => withAuthorization(basicAuthCondition)(Component);
 export const withOrganizationAuthorization = Component =>
-  withAuthorization(organizationAuthCondition)(Component);
-export const withAdminAuthorization = Component => withAuthorization(adminAuthCondition)(Component);
+  withAuthorization(organizationAuthCondition, ROUTES.NO_ORGANIZATION)(Component);
+export const withAdminAuthorization = Component =>
+  withAuthorization(adminAuthCondition, ROUTES.LOST)(Component); // TODO improve this, should probably redirect to a "no permissions page"
 
 export default withAuthorization;

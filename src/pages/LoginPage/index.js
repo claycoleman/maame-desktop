@@ -14,8 +14,9 @@ import BasePage from '..';
 import { MODAL_TIMEOUT_LENGTH } from '../../constants/values';
 
 const LoginPage = () =>
+  // TODO fix the crazy jank
   BasePage(
-    'Log In',
+    'Portal Sign In',
     <>
       <LoginForm />
       <hr />
@@ -66,12 +67,13 @@ class _LoginForm extends Component {
 
   handleModalFinished = () => {
     // we should hide the modal after it's done
+    const wasSucccessful = this.state.modalIcon === ICON_STATES.SUCCESS;
     this.setState({
-      ...INITIAL_STATE,
+      ...(wasSucccessful ? INITIAL_STATE : {}),
       showModal: false,
     });
     setTimeout(() => {
-      if (this.state.modalIcon === ICON_STATES.SUCCESS) {
+      if (wasSucccessful) {
         // redirect home
         this.props.history.push(ROUTES.HOME);
       }
@@ -93,21 +95,11 @@ class _LoginForm extends Component {
         />
         <Form.Group style={{ textAlign: 'left' }}>
           <Form.Label>Email</Form.Label>
-          <Form.Control
-            name="email"
-            value={email}
-            onChange={this.onChange}
-            type="text"
-          />
+          <Form.Control name="email" value={email} onChange={this.onChange} type="text" />
         </Form.Group>
         <Form.Group style={{ textAlign: 'left' }}>
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            name="password"
-            value={password}
-            onChange={this.onChange}
-            type="password"
-          />
+          <Form.Control name="password" value={password} onChange={this.onChange} type="password" />
         </Form.Group>
         <Button disabled={isInvalid || showModal} type="submit">
           Sign In

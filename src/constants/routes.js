@@ -5,6 +5,7 @@ export const REGISTER = '/signup';
 export const PASSWORD_FORGET = '/pw-forget';
 export const ABOUT = '/about';
 export const DONATIONS = '/donations';
+export const LOST = '/lost';
 
 /* NO ORG PAGES */
 export const NO_ORGANIZATION = '/no-organization';
