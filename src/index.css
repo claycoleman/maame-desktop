@@ -142,10 +142,6 @@ code {
   position: relative;
 }
 
-.invalidColorInput {
-  color: firebrick;
-}
-
 .prettyForm input,
 .prettyForm textarea {
   box-flex: 1;
@@ -349,11 +345,11 @@ code {
 
 /* janky but you do what you gotta do */
 
-.modal > div > div {
+.jankyModal > div > div {
   left: 25% !important;
 }
 
-.modal > div > div > div:last-child {
+.jankyModal > div > div > div:last-child {
   background-color: rgba(0, 0, 0, 0.3) !important;
 }
 

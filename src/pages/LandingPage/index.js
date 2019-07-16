@@ -1,5 +1,4 @@
 import React from 'react';
-import { MdArrowForward } from 'react-icons/md';
 
 import styles from './LandingPage.module.css';
 
@@ -12,6 +11,7 @@ import clay from '../../assets/images/clay.png';
 import heather from '../../assets/images/heather.png';
 import naomi from '../../assets/images/naomi.png';
 import olivia from '../../assets/images/olivia.png';
+import ButtonLinks from '../../components/ButtonLinks';
 
 const LandingPage = () => (
   <div className={styles.landingContainer}>
@@ -34,26 +34,18 @@ const LandingPage = () => (
         offers patient management, automatic visit scheduling, guided visit flows, and information
         around key warning signs and symptoms.
       </p>
-      <div className={styles.buttonsContainer}>
-        <a
-          className={styles.button}
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://play.google.com/store/apps/details?id=com.maame.nurses"
-        >
-          View on Google&nbsp;Play
-          <MdArrowForward className={styles.icon} color="white" size={20} />
-        </a>
-        <a
-          className={styles.button}
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://apps.apple.com/us/app/maame/id1464122939"
-        >
-          View on App&nbsp;Store
-          <MdArrowForward className={styles.icon} color="white" size={20} />
-        </a>
-      </div>
+      <ButtonLinks
+        buttons={[
+          {
+            text: `View on Google${String.fromCharCode(160)}Play`,
+            href: 'https://play.google.com/store/apps/details?id=com.maame.nurses',
+          },
+          {
+            text: `View on App${String.fromCharCode(160)}Store`,
+            href: 'https://apps.apple.com/us/app/maame/id1464122939',
+          },
+        ]}
+      />
     </span>
     <span className={styles.textBlock}>
       <h2>Our partners</h2>
@@ -117,17 +109,12 @@ const LandingPage = () => (
         Reach out if you'd like to get more information about how Maame can help you make an impact
         in your area.
       </p>
-      <div className={styles.buttonsContainer}>
-        <a
-          className={styles.button}
-          target="_blank"
-          rel="noopener noreferrer"
-          href="mailto:aob.maame@gmail.com"
-        >
-          Contact us
-          <MdArrowForward className={styles.icon} color="white" size={20} />
-        </a>
-      </div>
+      <ButtonLinks
+        button={{
+          text: `Contact us`,
+          href: 'mailto:aob.maame@gmail.com',
+        }}
+      />
     </span>
   </div>
 );

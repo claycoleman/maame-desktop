@@ -44,20 +44,22 @@ const Navigation = ({ authUser }) => {
 };
 
 const renderNavigationForAuthStatus = authUser => {
+  // OFFLINE TESTING
+  // return <NavigationAuth isAdmin={false} />;
   if (!authUser) {
     return <NavigationNoAuth />;
   } else if (!authUser.organizationId) {
     return <NavigationNoOrg />;
   } else {
-    return <NavigationAuth isAdmin={authUser.isAdmin} />;
+    return <NavigationAuth isAdmin={authUser.isTLOAdmin} />;
   }
 };
 
 const NavigationAuth = ({ isAdmin }) => (
   <>
     <CustomNavLink route={ROUTES.HOME} text={'Dashboard'} />
-    <CustomNavLink route={ROUTES.ACCOUNT} text={'Account'} />
-    {isAdmin && <CustomNavLink route={ROUTES.ADMIN} text={'Admin'} />}
+    {isAdmin && <CustomNavLink route={ROUTES.ACCOUNT} text={'Account'} />}
+    {/* {isAdmin && <CustomNavLink route={ROUTES.ADMIN} text={'Admin'} />} */}
     <SignOutButton />
   </>
 );
@@ -65,6 +67,7 @@ const NavigationAuth = ({ isAdmin }) => (
 const NavigationNoOrg = () => (
   <>
     <CustomNavLink route={ROUTES.NO_ORGANIZATION} text={'No Organization'} />
+    <CustomNavLink route={ROUTES.ACCOUNT} text={'Account'} />
     <SignOutButton />
   </>
 );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { withAdminAuthorization } from '../../components/Session';
+import { withTLOAdminAuthorization } from '../../components/Session';
 import BasePage from '..';
 
 const AdminPage = () =>
@@ -12,4 +12,4 @@ const AdminPage = () =>
     </>,
   );
 
-export default withAdminAuthorization(AdminPage);
+export default withTLOAdminAuthorization(AdminPage);

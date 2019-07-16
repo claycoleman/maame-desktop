@@ -61,7 +61,8 @@ class _RegisterForm extends Component {
             lastName,
             email,
             organizationId: null,
-            isAdmin: false, // manually add admins in the Firebase console
+            isOrgAdmin: false, // manually add admins in the Firebase console
+            isTLOAdmin: false, // manually add admins in the Firebase console
           },
           { merge: true },
         );
@@ -151,10 +152,12 @@ class _RegisterForm extends Component {
           />
         </Form.Group>
         <Button disabled={isInvalid || showModal} type="submit">
-          Sign Up
+          Sign up
         </Button>
 
-        {error && <p style={{ marginTop: 16, color: 'firebrick' }}>{error.message}</p>}
+        {error && (
+          <p style={{ color: 'red', marginTop: '1rem', marginBottom: 0 }}>{error.message}</p>
+        )}
       </Form>
     );
   }

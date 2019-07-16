@@ -1,0 +1,302 @@
+import React, { useState, useContext, useRef, useEffect } from 'react';
+
+import { Link } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Toast from 'react-bootstrap/Toast';
+
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
+
+import { useOrganizationsFromTLO, FirebaseContext } from '../Firebase';
+import { BounceLoader } from 'react-spinners';
+
+import * as ROUTES from '../../constants/routes';
+import homeStyles from '../../pages/HomePage/HomePage.module.css';
+import { isEmptyObject, useStateWithNullableDefault } from '../../modules/helpers';
+import ButtonLinks from '../ButtonLinks';
+
+const NewSubdistrictModal = ({
+  existingSubdistrict = {},
+  show,
+  handleClose,
+  handleSave,
+  handleRemove,
+  organization,
+  topLevelOrganization,
+  error,
+}) => {
+  const hasExistingSubdistrict = !isEmptyObject(existingSubdistrict);
+  const [subdistrictName, setSubdistrictName] = useStateWithNullableDefault(
+    existingSubdistrict.firstName,
+  );
+
+  const overlayRef = useRef(null);
+
+  let displayError = error;
+  if (displayError.startsWith('The email address is already in use by another account.')) {
+    displayError =
+      'A community with this name already exists in this district. Please verify that this community does not already exist, and use another name.';
+  }
+
+  return (
+    <Modal
+      show={show}
+      onHide={handleClose}
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          {hasExistingSubdistrict ? `Edit ${existingSubdistrict.name}` : 'Add new sub-district'}
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form.Group style={{ textAlign: 'left' }}>
+          <Form.Label>Sub-district name</Form.Label>
+          <Form.Control
+            autoFocus={true}
+            name="subdistrictName"
+            value={subdistrictName}
+            onChange={event => setSubdistrictName(event.target.value)}
+            type="text"
+          />
+        </Form.Group>
+        <p>
+          <b style={{ marginRight: 6 }}>Country:</b> {topLevelOrganization.country}
+        </p>
+      </Modal.Body>
+      <Modal.Footer>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <Button variant="secondary" onClick={handleClose} style={{ marginRight: '.5rem' }}>
+              Close
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                const communityData = {
+                  name: subdistrictName,
+                };
+                console.log(communityData);
+                handleSave(communityData);
+              }}
+              disabled={subdistrictName.trim().length === 0}
+            >
+              Save sub-district
+            </Button>
+          </div>
+          {error && (
+            <p style={{ color: 'red', marginTop: '1rem', marginBottom: 0, textAlign: 'right' }}>
+              {displayError}
+            </p>
+          )}
+        </div>
+      </Modal.Footer>
+      {hasExistingSubdistrict && (
+        <Modal.Footer>
+          <OverlayTrigger
+            trigger="click"
+            placement={'left'}
+            ref={elem => {
+              overlayRef.current = elem;
+            }}
+            overlay={
+              <Popover id={`popover-positioned-left`} title="Really delete?">
+                <strong>
+                  Are you sure you want to delete this sub-district from {topLevelOrganization.name}
+                  ?
+                </strong>{' '}
+                This can only be undone by reaching out to Maame Support{' '}
+                <b>(aob.maame@gmail.com)</b>, and all clients, pregnancies, and communities
+                associated with this community will be lost.
+                <Button
+                  style={{ marginTop: 12 }}
+                  variant={'danger'}
+                  onClick={() => {
+                    handleRemove();
+                  }}
+                >
+                  Final delete
+                </Button>
+                <Button
+                  style={{ marginTop: 12, marginLeft: 8 }}
+                  variant={'secondary'}
+                  onClick={() => {
+                    if (overlayRef.current) {
+                      overlayRef.current.hide();
+                    }
+                  }}
+                >
+                  Cancel
+                </Button>
+              </Popover>
+            }
+          >
+            <Button variant={'outline-danger'}>Delete sub-district from district</Button>
+          </OverlayTrigger>
+        </Modal.Footer>
+      )}
+    </Modal>
+  );
+};
+
+const OrganizationsManager = ({ topLevelOrganization }) => {
+  // OFFLINE TESTING
+  // topLevelOrganization = {
+  //   country: 'USA',
+  //   name: 'Test District',
+  //   id: 'tloID',
+  // };
+  const firebase = useContext(FirebaseContext);
+  const [organizationsError, organizationsLoading, organizations] = useOrganizationsFromTLO(
+    topLevelOrganization,
+    true,
+  );
+
+  const [saved, setSaved] = useState(false);
+  const [toastText, setToastText] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const [showSubdistrictModal, setShowSubdistrictModal] = useState(false);
+  const [subdistrictModalError, setSubdistrictModalError] = useState('');
+  const [existingSubdistrict, setExistingSubdistrict] = useState({});
+
+  if (organizationsError) {
+    return (
+      <Row>
+        <h3>Uh oh...</h3>
+        <p>We encountered an error: {organizationsError}</p>
+      </Row>
+    );
+  }
+  return (
+    <Row>
+      {organizationsLoading || !topLevelOrganization ? (
+        <div
+          style={{
+            width: '100%',
+            height: 400,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <BounceLoader sizeUnit={'px'} size={135} color={'#c00'} loading={true} />
+        </div>
+      ) : (
+        <>
+          <Col xs={12}>
+            <div className={homeStyles.sections}>
+              {organizations.map((organization, index) => {
+                return (
+                  <Link
+                    className={homeStyles.sectionLink}
+                    to={{
+                      pathname: ROUTES.MANAGE_USERS_BASE + organization.id,
+                    }}
+                  >
+                    <h4 style={{ marginBottom: 0 }}>{organization.name}</h4>
+                  </Link>
+                );
+              })}
+            </div>
+            {organizations.length === 0 && (
+              <p>There are no sub-districts for this district yet! Add some below.</p>
+            )}
+            <ButtonLinks
+              style={{ justifyContent: 'center' }}
+              button={{
+                text: 'Add subdistrict',
+                onClick: () => {
+                  setExistingSubdistrict({});
+                  setShowSubdistrictModal(true);
+                },
+                noArrow: true,
+              }}
+            />
+          </Col>
+          {showSubdistrictModal && (
+            <NewSubdistrictModal
+              show={true}
+              error={subdistrictModalError}
+              handleSave={async subdistrictData => {
+                if (existingSubdistrict.id) {
+                  // updating
+                  // const success = await updateCommunityAndUser(
+                  //   firebase,
+                  //   subdistrictData,
+                  //   existingSubdistrict.email,
+                  //   topLevelOrganization.rup,
+                  // );
+                  // if (success) {
+                  //   await firebase
+                  //     .user(existingSubdistrict.id)
+                  //     .set(subdistrictData, { merge: true });
+                  //   updateUserMapping(true);
+                  //   setShowSubdistrictModal(false);
+                  // }
+                } else {
+                  // creating new
+                  // const success = await addCommunityAndUser(
+                  //   firebase,
+                  //   subdistrictData,
+                  //   topLevelOrganization.rup,
+                  //   organization,
+                  // );
+                  // if (success) {
+                  //   const approvedUsers = copyArray(organization.approvedUsers);
+                  //   approvedUsers.push(subdistrictData.email);
+                  //   await firebase
+                  //     .organization(organization.id)
+                  //     .set({ approvedUsers }, { merge: true });
+                  //   setShowSubdistrictModal(false);
+                  // }
+                }
+              }}
+              handleClose={() => {
+                setShowSubdistrictModal(false);
+                setExistingSubdistrict({});
+              }}
+              handleRemove={() => {
+                // removeSubdistrict(existingSubdistrict, topLevelOrganization);
+              }}
+              topLevelOrganization={topLevelOrganization}
+              existingSubdistrict={existingSubdistrict}
+            />
+          )}
+        </>
+      )}
+      <Toast
+        style={{
+          position: 'fixed',
+          top: 68,
+          right: 8,
+          minWidth: 300,
+        }}
+        show={!!toastText}
+        onClose={() => {
+          setToastText(false);
+        }}
+        delay={3000}
+        autohide
+      >
+        <Toast.Header>
+          <strong className="mr-auto">{toastText}</strong>
+          <small>Just now</small>
+        </Toast.Header>
+        <Toast.Body>
+          {saved
+            ? 'Visit flow saved!'
+            : 'There was an error saving your visit flow. Please try again.'}
+        </Toast.Body>
+      </Toast>
+    </Row>
+  );
+};
+
+export default OrganizationsManager;

@@ -1,0 +1,58 @@
+@mixin backgroundColorAndHover($background-color) {
+  background-color: $background-color;
+  &:hover {
+    background-color: darken($background-color, 20%);
+  }
+}
+
+.button {
+  padding: 10px 20px;
+  margin-right: 16px;
+  @include backgroundColorAndHover(#cc0000);
+  margin-top: 16px;
+  color: #ffffff;
+  text-decoration: none;
+  transition: all 0.4s cubic-bezier(0.15, 0.9, 0.34, 0.95);
+  transition-property: background-color filter;
+  position: relative;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.button.back {
+  @include backgroundColorAndHover(#aaaaaa);
+  padding-left: 40px;
+}
+
+.button.forward {
+  padding-right: 40px;
+}
+
+.button:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.icon {
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  transition: all 0.4s cubic-bezier(0.15, 0.9, 0.34, 0.95);
+  transition-property: right left;
+}
+
+.forward .icon {
+  right: 12px;
+}
+
+.button.forward:hover .icon {
+  right: 6px;
+}
+
+.back .icon {
+  left: 12px;
+}
+
+.button.back:hover .icon {
+  left: 6px;
+}

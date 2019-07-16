@@ -7,10 +7,25 @@ import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
 
 export const basicAuthCondition = authUser => !!authUser;
+
+// OFFLINE TESTING
+// export const organizationAuthCondition = authUser =>
+//   true || (basicAuthCondition(authUser) && !!authUser.organizationId);
+
+// export const orgAdminAuthCondition = authUser =>
+//   true || (organizationAuthCondition(authUser) && authUser.isOrgAdmin);
+
+// export const tloAdminAuthCondition = authUser =>
+//   true || (organizationAuthCondition(authUser) && authUser.isTLOAdmin);
+
 export const organizationAuthCondition = authUser =>
   basicAuthCondition(authUser) && !!authUser.organizationId;
-export const adminAuthCondition = authUser =>
-  organizationAuthCondition(authUser) && authUser.isAdmin;
+
+export const orgAdminAuthCondition = authUser =>
+  tloAdminAuthCondition(authUser) || (organizationAuthCondition(authUser) && authUser.isOrgAdmin);
+
+export const tloAdminAuthCondition = authUser =>
+  organizationAuthCondition(authUser) && authUser.isTLOAdmin;
 
 const withAuthorization = (condition, fallbackRoute = ROUTES.LOGIN) => Component => {
   class WithAuthorization extends React.Component {
@@ -54,9 +69,17 @@ const withAuthorization = (condition, fallbackRoute = ROUTES.LOGIN) => Component
 };
 
 export const withBasicAuthorization = Component => withAuthorization(basicAuthCondition)(Component);
+
+// community level auth
 export const withOrganizationAuthorization = Component =>
   withAuthorization(organizationAuthCondition, ROUTES.NO_ORGANIZATION)(Component);
-export const withAdminAuthorization = Component =>
-  withAuthorization(adminAuthCondition, ROUTES.LOST)(Component); // TODO improve this, should probably redirect to a "no permissions page"
+
+// sub district admin level auth
+export const withOrgAdminAuthorization = Component =>
+  withAuthorization(orgAdminAuthCondition, ROUTES.LOST)(Component); // TODO improve this, should probably redirect to a "no permissions page"
+
+// district admin level auth
+export const withTLOAdminAuthorization = Component =>
+  withAuthorization(tloAdminAuthCondition, ROUTES.LOST)(Component); // TODO improve this, should probably redirect to a "no permissions page"
 
 export default withAuthorization;

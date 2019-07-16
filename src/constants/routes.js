@@ -10,10 +10,19 @@ export const LOST = '/lost';
 /* NO ORG PAGES */
 export const NO_ORGANIZATION = '/no-organization';
 
-
 /* AUTHED PAGES */
 export const HOME = '/dashboard';
 export const ACCOUNT = '/account';
+
+/* COMMUNITY PAGES */
+export const ANALYTICS = '/analytics';
+
+/* SUB DISTRICT PAGES */
+export const MANAGE_USERS_BASE = '/manage-users/';
+export const MANAGE_USERS = `${MANAGE_USERS_BASE}:orgId?`; // orgId will be passed when entering as a top level admin
+
+/* DISTRICT PAGES */
+export const MANAGE_ORGANIZATIONS = '/manage-orgs';
 export const FLOW_CUSTOMIZER = '/flows';
 export const SCREEN_BUILDER = '/flows/screen-builder/:screenId';
 

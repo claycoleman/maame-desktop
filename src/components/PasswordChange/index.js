@@ -89,7 +89,7 @@ class PasswordChangeForm extends Component {
           />
         </Form.Group>
         <Button disabled={isInvalid || showModal} type="submit">
-          Change Password
+          Change password
         </Button>
         {error && <p>{error.message}</p>}
       </Form>

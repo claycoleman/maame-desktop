@@ -43,7 +43,7 @@ const FlowVisitAssignerItem = ({ visitCode, availableFlows, topLevelOrganization
               setLoading(true);
               // update the setting on the TopLevelOrganization
               const updateData = {};
-              updateData.visitsToFlows = topLevelOrganization.data().visitsToFlows;
+              updateData.visitsToFlows = topLevelOrganization.visitsToFlows;
               updateData.visitsToFlows[visitCode] = newComponentTypeTuple.value; // value is the visitFlow.id
 
               topLevelOrganization.ref
@@ -61,7 +61,7 @@ const FlowVisitAssignerItem = ({ visitCode, availableFlows, topLevelOrganization
                   setShowToast(true);
                 });
             }}
-            value={topLevelOrganization.data().visitsToFlows[visitCode]}
+            value={topLevelOrganization.visitsToFlows[visitCode]}
           />
           <Toast
             style={{

@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
 
 import { withFirebase } from '../Firebase';
+import { withRouter } from 'react-router-dom';
 import styles from '../Navigation/Navigation.module.css';
 import IconModal, { ICON_STATES } from '../IconModal';
 import { MODAL_TIMEOUT_LENGTH } from '../../constants/values';
+import { compose } from 'recompose';
 
-const _SignOutButton = ({ firebase }) => {
-  const [showModal, setShowModal] = useState(false)
+import * as ROUTES from '../../constants/routes';
+
+const _SignOutButton = ({ firebase, history }) => {
+  const [showModal, setShowModal] = useState(false);
   const exitFunction = () => {
     setShowModal(false);
-    setTimeout(firebase.doSignOut, MODAL_TIMEOUT_LENGTH);
+    setTimeout(() => {
+      history.push(ROUTES.LANDING);
+      firebase.doSignOut();
+    }, MODAL_TIMEOUT_LENGTH);
   };
   return (
     <>
@@ -34,6 +41,9 @@ const _SignOutButton = ({ firebase }) => {
 };
 
 // so VS Code can auto import
-const SignOutButton = withFirebase(_SignOutButton);
+const SignOutButton = compose(
+  withFirebase,
+  withRouter,
+)(_SignOutButton);
 
 export default SignOutButton;

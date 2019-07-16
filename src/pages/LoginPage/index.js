@@ -102,10 +102,12 @@ class _LoginForm extends Component {
           <Form.Control name="password" value={password} onChange={this.onChange} type="password" />
         </Form.Group>
         <Button disabled={isInvalid || showModal} type="submit">
-          Sign In
+          Sign in
         </Button>
 
-        {error && <p>{error.message}</p>}
+        {error && (
+          <p style={{ color: 'red', marginTop: '1rem', marginBottom: 0 }}>{error.message}</p>
+        )}
       </Form>
     );
   }

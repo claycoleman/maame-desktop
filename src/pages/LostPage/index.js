@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { MdArrowForward } from 'react-icons/md';
 
 import styles from '../LandingPage/LandingPage.module.css';
+import { AuthUserContext } from '../../components/Session';
+import * as ROUTES from '../../constants/routes';
 
 function shuffle(a) {
   var j, x, i;
@@ -29,6 +31,7 @@ const LostPage = () => {
   }
 
   const [songIndex, setSongIndex] = useState(0);
+  const authUser = useContext(AuthUserContext);
 
   return (
     <div className={[styles.landingContainer].join(' ')}>
@@ -36,7 +39,11 @@ const LostPage = () => {
         <span className={styles.textBlock}>
           <h2>You're lost.</h2>
           <div className={[styles.center].join(' ')}>
-            <a className={styles.button} style={{ marginLeft: 16 }} href="/">
+            <a
+              className={styles.button}
+              style={{ marginLeft: 16 }}
+              href={authUser ? ROUTES.HOME : ROUTES.LANDING}
+            >
               Back to home
               <MdArrowForward className={styles.icon} color="white" size={20} />
             </a>

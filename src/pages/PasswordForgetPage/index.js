@@ -96,7 +96,7 @@ class _PasswordForgetForm extends Component {
           />
         </Form.Group>
         <Button disabled={isInvalid || showModal} type="submit">
-          Reset Password
+          Reset password
         </Button>
 
         {error && <p>{error.message}</p>}

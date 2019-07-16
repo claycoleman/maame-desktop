@@ -13,7 +13,7 @@ import Col from 'react-bootstrap/Col';
 import { CONTAINER_WIDTHS } from '../../constants/values';
 import { useTopLevelOrganization } from '../../components/Firebase';
 import AuthUserContext from '../../components/Session/context';
-import { withAdminAuthorization } from '../../components/Session';
+import { withTLOAdminAuthorization } from '../../components/Session';
 
 const TABS = {
   BUILD_FLOWS: 'build',
@@ -61,8 +61,8 @@ const FlowCustomizerPage = () => {
         </Tab.Content>
       </Tab.Container>
     </>,
-    CONTAINER_WIDTHS.WIDE,
+    { width: CONTAINER_WIDTHS.WIDE },
   );
 };
 
-export default withAdminAuthorization(FlowCustomizerPage);
+export default withTLOAdminAuthorization(FlowCustomizerPage);

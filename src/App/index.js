@@ -21,6 +21,9 @@ import ScreenBuilderPage from '../pages/ScreenBuilderPage';
 
 import { setupAuthentication } from '../components/Session';
 import LostPage from '../pages/LostPage';
+import ManageOrganizationsPage from '../pages/ManageOrganizationsPage';
+import ManageUsersPage from '../pages/ManageUsersPage';
+import AnalyticsPage from '../pages/Analytics Page';
 
 class App extends Component {
   constructor(props) {
@@ -53,6 +56,14 @@ class App extends Component {
             <Route exact path={ROUTES.HOME} component={HomePage} />
             <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
 
+            {/* COMMUNITY PAGES */}
+            <Route exact path={ROUTES.ANALYTICS} component={AnalyticsPage} />
+
+            {/* SUB DISTRICT PAGES */}
+            <Route exact path={ROUTES.MANAGE_USERS} component={ManageUsersPage} />
+
+            {/* DISTRICT PAGES */}
+            <Route exact path={ROUTES.MANAGE_ORGANIZATIONS} component={ManageOrganizationsPage} />
             <Route exact path={ROUTES.FLOW_CUSTOMIZER} component={FlowCustomizerPage} />
             <Route exact path={ROUTES.SCREEN_BUILDER} component={ScreenBuilderPage} />
 

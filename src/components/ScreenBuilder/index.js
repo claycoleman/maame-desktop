@@ -681,7 +681,7 @@ export default class ScreenBuilder extends Component {
             <div className="addRowButton standaloneButton" onClick={this.toggleShortcuts}>
               {showShortcuts ? 'Hide' : 'Show'} Shortcuts
             </div>
-            <div className="modal">
+            <div className="jankyModal">
               <Modal visible={showShortcuts} effect="fadeInDown" onClickAway={this.toggleShortcuts}>
                 <div style={{ padding: 8, paddingLeft: 24, paddingRight: 24 }}>
                   <h3>Shortcuts</h3>

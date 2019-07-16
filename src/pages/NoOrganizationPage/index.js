@@ -12,7 +12,7 @@ import { MODAL_TIMEOUT_LENGTH } from '../../constants/values';
 import * as ROUTES from '../../constants/routes';
 
 // TODO on snapshot of the organizations, see if now an organization has them
-const NoOrganizationPage = () => {
+const NoOrganizationPage = ({ history }) => {
   const authUser = useContext(AuthUserContext);
   const firebase = useContext(FirebaseContext);
 
@@ -27,13 +27,13 @@ const NoOrganizationPage = () => {
     setTimeout(() => {
       if (wasSucccessful) {
         // redirect home
-        this.props.history.push(ROUTES.HOME);
+        history.push(ROUTES.HOME);
       }
     }, MODAL_TIMEOUT_LENGTH);
   };
 
   if (authUser.organizationId) {
-    this.props.history.push(ROUTES.HOME);
+    history.push(ROUTES.HOME);
   }
 
   return BasePage(
@@ -54,7 +54,7 @@ const NoOrganizationPage = () => {
         and the Maame team will contact you shortly about getting your organization set up with the
         Maame tools and services.
       </p>
-      <div className={styles.buttonsContainer}>
+      <div className={styles.flexRow}>
         <a
           className={styles.button}
           href="#refreshOrganizationStatus"

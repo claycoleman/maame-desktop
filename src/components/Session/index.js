@@ -3,10 +3,12 @@ import setupAuthentication from './setupAuthentication';
 import withAuthorization, {
   basicAuthCondition,
   organizationAuthCondition,
-  adminAuthCondition,
+  orgAdminAuthCondition,
+  tloAdminAuthCondition,
   withBasicAuthorization,
   withOrganizationAuthorization,
-  withAdminAuthorization,
+  withOrgAdminAuthorization,
+  withTLOAdminAuthorization,
 } from './withAuthorization';
 
 export {
@@ -16,8 +18,10 @@ export {
   withAuthorization,
   basicAuthCondition,
   organizationAuthCondition,
-  adminAuthCondition,
+  orgAdminAuthCondition,
+  tloAdminAuthCondition,
   withBasicAuthorization,
   withOrganizationAuthorization,
-  withAdminAuthorization,
+  withOrgAdminAuthorization,
+  withTLOAdminAuthorization,
 };

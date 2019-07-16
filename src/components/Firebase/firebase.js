@@ -19,6 +19,7 @@ class Firebase {
     this.db = app.firestore();
 
     this.userCollectionRef = this.db.collection('users');
+    this.organizationCollectionRef = this.db.collection('organizations');
     this.topLevelOrganizationCollectionRef = this.db.collection('top-level-organizations');
   }
 
@@ -26,6 +27,36 @@ class Firebase {
 
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
+
+  doCreateUserAsAdminWithEmailAndPassword = (email, password) => {
+    const tempFirebase = require('firebase/app');
+    require('firebase/auth');
+    var secondaryApp = tempFirebase.initializeApp(config, 'Secondary');
+
+    return secondaryApp
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(firebaseUser => {
+        firebaseUser.secondaryLogout = () => {
+          secondaryApp.auth().signOut();
+          secondaryApp.delete();
+        };
+        return firebaseUser;
+      });
+  };
+
+  doUpdateUserEmailAsAdmin = (oldEmail, newEmail, password) => {
+    const tempFirebase = require('firebase/app');
+    require('firebase/auth');
+    var secondaryApp = tempFirebase.initializeApp(config, 'Secondary');
+
+    return secondaryApp
+      .auth()
+      .signInWithEmailAndPassword(oldEmail, password)
+      .then(userCredential => {
+        return userCredential.user.updateEmail(newEmail);
+      });
+  };
 
   doSignInWithEmailAndPassword = (email, password) =>
     this.auth.signInWithEmailAndPassword(email, password);
@@ -37,13 +68,14 @@ class Firebase {
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
 
   onAuthUserListener = (next, fallback) =>
+    // TODO find a way to kick users out after they lose auth privileges 
+    // by listening to a snapshot of the db user
     this.auth.onAuthStateChanged(authUser => {
       if (authUser) {
         this.user(authUser.uid)
           .get()
           .then(snapshot => {
             const dbUser = snapshot.data();
-            
             if (dbUser) {
               // default empty roles
               if (!dbUser.roles) {
@@ -87,6 +119,9 @@ class Firebase {
       });
 
   */
+  organization = id => this.organizationCollectionRef.doc(id);
+  organizations = () => this.organizationCollectionRef;
+
   topLevelOrganization = id => this.topLevelOrganizationCollectionRef.doc(id);
   topLevelOrganizations = () => this.topLevelOrganizationCollectionRef;
 }
