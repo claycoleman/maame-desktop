@@ -37,9 +37,9 @@ class Firebase {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(firebaseUser => {
-        firebaseUser.secondaryLogout = () => {
-          secondaryApp.auth().signOut();
-          secondaryApp.delete();
+        firebaseUser.secondaryLogout = async () => {
+          await secondaryApp.auth().signOut();
+          return secondaryApp.delete();
         };
         return firebaseUser;
       });
@@ -53,8 +53,10 @@ class Firebase {
     return secondaryApp
       .auth()
       .signInWithEmailAndPassword(oldEmail, password)
-      .then(userCredential => {
-        return userCredential.user.updateEmail(newEmail);
+      .then(async userCredential => {
+        await userCredential.user.updateEmail(newEmail);
+        await secondaryApp.auth().signOut();
+        return secondaryApp.delete();
       });
   };
 
@@ -68,7 +70,7 @@ class Firebase {
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
 
   onAuthUserListener = (next, fallback) =>
-    // TODO find a way to kick users out after they lose auth privileges 
+    // TODO find a way to kick users out after they lose auth privileges
     // by listening to a snapshot of the db user
     this.auth.onAuthStateChanged(authUser => {
       if (authUser) {

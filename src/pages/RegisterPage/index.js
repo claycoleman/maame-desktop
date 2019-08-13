@@ -50,8 +50,6 @@ class _RegisterForm extends Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
-        console.log(authUser);
-        console.log(authUser.user);
         // Create a user in your Firebase realtime database
         return this.props.firebase.user(authUser.user.uid).set(
           {
@@ -67,7 +65,7 @@ class _RegisterForm extends Component {
           { merge: true },
         );
       })
-      .then(authUser => {
+      .then(_dbUser => {
         this.setState({
           modalText: 'Registered!',
           modalIcon: ICON_STATES.SUCCESS,

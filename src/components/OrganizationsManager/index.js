@@ -10,13 +10,14 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
+import { MdModeEdit } from 'react-icons/md';
 
 import { useOrganizationsFromTLO, FirebaseContext } from '../Firebase';
 import { BounceLoader } from 'react-spinners';
 
 import * as ROUTES from '../../constants/routes';
 import homeStyles from '../../pages/HomePage/HomePage.module.css';
-import { isEmptyObject, useStateWithNullableDefault } from '../../modules/helpers';
+import { isEmptyObject, useStateWithNullableDefault, to } from '../../modules/helpers';
 import ButtonLinks from '../ButtonLinks';
 
 const NewSubdistrictModal = ({
@@ -31,7 +32,7 @@ const NewSubdistrictModal = ({
 }) => {
   const hasExistingSubdistrict = !isEmptyObject(existingSubdistrict);
   const [subdistrictName, setSubdistrictName] = useStateWithNullableDefault(
-    existingSubdistrict.firstName,
+    existingSubdistrict.name,
   );
 
   const overlayRef = useRef(null);
@@ -79,11 +80,10 @@ const NewSubdistrictModal = ({
             <Button
               variant="primary"
               onClick={() => {
-                const communityData = {
+                const subdistrict = {
                   name: subdistrictName,
                 };
-                console.log(communityData);
-                handleSave(communityData);
+                handleSave(subdistrict);
               }}
               disabled={subdistrictName.trim().length === 0}
             >
@@ -114,10 +114,14 @@ const NewSubdistrictModal = ({
                 This can only be undone by reaching out to Maame Support{' '}
                 <b>(aob.maame@gmail.com)</b>, and all clients, pregnancies, and communities
                 associated with this community will be lost.
+                <br />
                 <Button
                   style={{ marginTop: 12 }}
                   variant={'danger'}
                   onClick={() => {
+                    if (overlayRef.current) {
+                      overlayRef.current.hide();
+                    }
                     handleRemove();
                   }}
                 >
@@ -166,6 +170,65 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
   const [subdistrictModalError, setSubdistrictModalError] = useState('');
   const [existingSubdistrict, setExistingSubdistrict] = useState({});
 
+  const updateSubdistrict = async (firebase, subdistrictData, existingSubdistrictId) => {
+    let error, _response;
+    [error, _response] = await to(
+      firebase.organization(existingSubdistrictId).set(subdistrictData, { merge: true }),
+    );
+    if (error) {
+      setSubdistrictModalError(error.message);
+      return false;
+    }
+    // success
+    return true;
+  };
+
+  const addSubdistrict = async (firebase, newSubdistrictData) => {
+    const finalNewSubdistrictData = {
+      ...newSubdistrictData,
+      country: topLevelOrganization.country,
+      topLevelOrganizationId: topLevelOrganization.id,
+      approvedUsers: [],
+    };
+    let error, _newSubdistrict;
+
+    // Create a new subdistrict
+    [error, _newSubdistrict] = await to(firebase.organizations().add(finalNewSubdistrictData));
+
+    if (error) {
+      setSubdistrictModalError(error.message);
+      return false;
+    }
+
+    return true;
+  };
+
+  const removeSubdistrict = async (firebase, organizationToDelete, topLevelOrganization) => {
+    const existingCommunities = await firebase
+      .users()
+      .where('organizationId', '==', organizationToDelete.id)
+      .get()
+      .then(snapshot => {
+        if (snapshot && snapshot.docs && snapshot.docs.length > 0) {
+          return snapshot.docs;
+        }
+        return [];
+      });
+
+    console.log(existingCommunities);
+    if (existingCommunities.length > 0) {
+      // we've got communities – don't think we actually want to delete
+      setSubdistrictModalError(
+        'This sub-district still has communities associated with it. As a safety precaution, you cannot delete a sub-district until all its communities have first been removed.',
+      );
+      return;
+    }
+
+    // go ahead and delete it
+    await firebase.organization(organizationToDelete.id).delete();
+    setShowSubdistrictModal(false);
+  };
+
   if (organizationsError) {
     return (
       <Row>
@@ -195,12 +258,28 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
               {organizations.map((organization, index) => {
                 return (
                   <Link
-                    className={homeStyles.sectionLink}
+                    className={[homeStyles.sectionLink, homeStyles.withIcon].join(' ')}
                     to={{
                       pathname: ROUTES.MANAGE_USERS_BASE + organization.id,
                     }}
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                    }}
                   >
                     <h4 style={{ marginBottom: 0 }}>{organization.name}</h4>
+                    <MdModeEdit
+                      className={homeStyles.sectionLinkIcon}
+                      color="black"
+                      size={28}
+                      onClick={event => {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        setExistingSubdistrict(organization);
+                        setShowSubdistrictModal(true);
+                      }}
+                    />
                   </Link>
                 );
               })}
@@ -227,35 +306,20 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
               handleSave={async subdistrictData => {
                 if (existingSubdistrict.id) {
                   // updating
-                  // const success = await updateCommunityAndUser(
-                  //   firebase,
-                  //   subdistrictData,
-                  //   existingSubdistrict.email,
-                  //   topLevelOrganization.rup,
-                  // );
-                  // if (success) {
-                  //   await firebase
-                  //     .user(existingSubdistrict.id)
-                  //     .set(subdistrictData, { merge: true });
-                  //   updateUserMapping(true);
-                  //   setShowSubdistrictModal(false);
-                  // }
+                  const success = await updateSubdistrict(
+                    firebase,
+                    subdistrictData,
+                    existingSubdistrict.id,
+                  );
+                  if (success) {
+                    setShowSubdistrictModal(false);
+                  }
                 } else {
                   // creating new
-                  // const success = await addCommunityAndUser(
-                  //   firebase,
-                  //   subdistrictData,
-                  //   topLevelOrganization.rup,
-                  //   organization,
-                  // );
-                  // if (success) {
-                  //   const approvedUsers = copyArray(organization.approvedUsers);
-                  //   approvedUsers.push(subdistrictData.email);
-                  //   await firebase
-                  //     .organization(organization.id)
-                  //     .set({ approvedUsers }, { merge: true });
-                  //   setShowSubdistrictModal(false);
-                  // }
+                  const success = await addSubdistrict(firebase, subdistrictData);
+                  if (success) {
+                    setShowSubdistrictModal(false);
+                  }
                 }
               }}
               handleClose={() => {
@@ -263,7 +327,7 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
                 setExistingSubdistrict({});
               }}
               handleRemove={() => {
-                // removeSubdistrict(existingSubdistrict, topLevelOrganization);
+                removeSubdistrict(firebase, existingSubdistrict, topLevelOrganization);
               }}
               topLevelOrganization={topLevelOrganization}
               existingSubdistrict={existingSubdistrict}
@@ -271,7 +335,7 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
           )}
         </>
       )}
-      <Toast
+      {/* <Toast
         style={{
           position: 'fixed',
           top: 68,
@@ -294,7 +358,7 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
             ? 'Visit flow saved!'
             : 'There was an error saving your visit flow. Please try again.'}
         </Toast.Body>
-      </Toast>
+      </Toast> */}
     </Row>
   );
 };

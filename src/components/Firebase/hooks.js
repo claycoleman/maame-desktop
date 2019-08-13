@@ -12,7 +12,6 @@ export function useOrganization(id) {
   // subscribe to the organization document and update
   // our state when it changes.
   useEffect(() => {
-    console.log(id);
     if (id) {
       const unsubscribe = firebase.organization(id).onSnapshot(
         doc => {
@@ -147,8 +146,6 @@ export function useOrganizationsFromTLO(topLevelOrganization, shouldExcludeAdmin
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [organizations, setOrganizations] = useState([]);
-
-  console.log(topLevelOrganization);
 
   useEffect(() => {
     if (topLevelOrganization) {

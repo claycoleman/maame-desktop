@@ -24,9 +24,6 @@ const ManageOrganizationsPage = () => {
     adminOrganizationId,
   );
 
-  console.log(topLevelOrganization);
-  console.log(adminOrganization);
-
   return BasePage(
     'Manage Sub-Districts',
     <>

@@ -35,7 +35,6 @@ const withAuthorization = (condition, fallbackRoute = ROUTES.LOGIN) => Component
       // and also new navigations there
       this.listener = this.props.firebase.onAuthUserListener(
         authUser => {
-          console.log(authUser);
           if (!condition(authUser)) {
             this.props.history.push(fallbackRoute);
           }

@@ -48,8 +48,9 @@ const NewCommunityModal = ({
     false,
   );
   const [displayPassword, setDisplayPassword] = useState(false);
+  const [saveStarted, setSaveStarted] = useState(false);
 
-  const preppedName = communityName.replace(/\ /g, '').toLowerCase();
+  const preppedName = communityName.replace(/\W/g, '').toLowerCase();
   const communityEmail = `${preppedName}.${topLevelOrganization.district.toLowerCase()}@maame.org`;
 
   const overlayRef = useRef(null);
@@ -133,15 +134,19 @@ const NewCommunityModal = ({
                     setError('Please enter a valid email.');
                     return;
                   }
+                  setSaveStarted(true);
                   const communityData = {
                     email,
                     adminName,
                     index: existingCommunity ? existingCommunity.index : '',
                   };
-                  console.log(communityData);
                   handleSave(communityData);
                 }}
-                disabled={communityName.trim().length === 0 || communityType.trim().length === 0}
+                disabled={
+                  communityName.trim().length === 0 ||
+                  communityType.trim().length === 0 ||
+                  saveStarted
+                }
               >
                 Save admin user
               </Button>
@@ -165,10 +170,14 @@ const NewCommunityModal = ({
                 <Popover id={`popover-positioned-left`} title="Really delete?">
                   <strong>Are you sure you want to remove this admin user?</strong> The user can be
                   added again later below.
+                  <br />
                   <Button
                     style={{ marginTop: 12 }}
                     variant={'danger'}
                     onClick={() => {
+                      if (overlayRef.current) {
+                        overlayRef.current.hide();
+                      }
                       handleRemove();
                     }}
                   >
@@ -282,10 +291,12 @@ const NewCommunityModal = ({
                   email: communityEmail,
                   isOrgAdmin,
                 };
-                console.log(communityData);
+                setSaveStarted(true);
                 handleSave(communityData);
               }}
-              disabled={preppedName.trim().length === 0 || communityType.trim().length === 0}
+              disabled={
+                preppedName.trim().length === 0 || communityType.trim().length === 0 || saveStarted
+              }
             >
               Save community
             </Button>
@@ -312,10 +323,14 @@ const NewCommunityModal = ({
                 </strong>{' '}
                 This cannot be undone, and any clients or pregnancies associated with this community
                 will be lost.
+                <br />
                 <Button
                   style={{ marginTop: 12 }}
                   variant={'danger'}
                   onClick={() => {
+                    if (overlayRef.current) {
+                      overlayRef.current.hide();
+                    }
                     handleRemove();
                   }}
                 >
@@ -355,7 +370,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
   const [showCommunityModal, setShowCommunityModal] = useState(false);
   const [communityModalError, setCommunityModalError] = useState('');
 
-  const userList = organization ? organization.approvedUsers : [];
+  const userList = organization ? organization.approvedUsers : null;
   const userMappingRef = useRef({});
 
   const updateUserMapping = (forceRefresh = false) => {
@@ -363,6 +378,17 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
       setUsersLoading(true);
 
       const newMapping = {};
+
+      // TODO we need to fix this to work if the userList is empty
+      if (userList === null) {
+        return;
+      }
+
+      if (userList.length === 0) {
+        // we have received an userList, and it's empty
+        setUsersLoading(false);
+        return;
+      }
 
       userList.forEach(userEmail => {
         if (
@@ -465,6 +491,13 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
     let approvedUsers = copyArray(organization.approvedUsers);
     approvedUsers = approvedUsers.filter(userEmail => userEmail !== communityData.email);
 
+    if (approvedUsers.length === 0) {
+      setCommunityModalError(
+        'You cannot remove this admin user, as your district must have at least one admin user.',
+      );
+      return;
+    }
+
     let updatedUserData = { organizationId: '', topLevelOrganizationId: '' };
     if (isAdminOrg) {
       // take away isTLOAdmin status
@@ -528,25 +561,29 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
     setShowCommunityModal(false);
   };
 
-  const updateEmailInApprovedUsers = async (communityData, organization) => {
-    const { email, index, adminName } = communityData;
+  const updateEmailInApprovedUsers = async (
+    existingCommunityData,
+    newCommunityData,
+    organization,
+  ) => {
     let approvedUsers = copyArray(organization.approvedUsers);
-    if (approvedUsers.indexOf(email) >= 0) {
-      if (
-        approvedUsers.indexOf(email) === index &&
-        organization.adminEmailsToNames[email] !== adminName
-      ) {
-        // we're working on the original one, keep updating
-      } else {
-        setCommunityModalError(
-          isAdminOrg
-            ? 'An admin user with this email already exists in this district. Please use another email.'
-            : 'A community with this name already exists. Please verify that you entered the community name correctly, or use another name. If you need to restore an existing community to a sub-district, please contact Maame support via email or WhatsApp.',
-        );
-        return;
-      }
+
+    if (
+      approvedUsers.indexOf(newCommunityData.email) >= 0 &&
+      existingCommunityData.email !== newCommunityData.email
+    ) {
+      // this email is already in the approved users and we're not editing the same approvedUser - we are definitely overlapping
+      setCommunityModalError(
+        isAdminOrg
+          ? 'An admin user with this email already exists in this district. Please use another email.'
+          : 'A community with this name already exists. Please verify that you entered the community name correctly, or use another name. If you need to restore an existing community to a sub-district, please contact Maame support via email or WhatsApp.',
+      );
+      return;
     }
-    approvedUsers[index] = email;
+
+    const index = approvedUsers.indexOf(existingCommunityData.email);
+    approvedUsers[index] = newCommunityData.email;
+
     let updatedOrganizationData = { approvedUsers };
     let updatedUserData = {
       organizationId: organization.id,
@@ -555,7 +592,8 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
 
     if (isAdminOrg) {
       let adminEmailsToNames = deepCopyObject(organization.adminEmailsToNames);
-      adminEmailsToNames[email] = adminName;
+      delete adminEmailsToNames[existingCommunityData.email];
+      adminEmailsToNames[newCommunityData.email] = newCommunityData.adminName;
       updatedOrganizationData.adminEmailsToNames = adminEmailsToNames;
       // add isTLOAdmin status
       updatedUserData.isTLOAdmin = true;
@@ -565,7 +603,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
 
     await firebase
       .users()
-      .where('email', '==', communityData.email)
+      .where('email', '==', newCommunityData.email)
       .get()
       .then(snapshot => {
         if (snapshot && snapshot.docs && snapshot.docs.length > 0) {
@@ -618,6 +656,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
   const [tloError, tloLoading, topLevelOrganization] = useTopLevelOrganization(
     organization ? organization.topLevelOrganizationId : null,
   );
+
   return (
     <Row>
       {usersLoading || !organization || !topLevelOrganization ? (
@@ -703,7 +742,9 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
                       {communityObj.firstName} {communityObj.lastName}
                     </h4>
                     {communityObj.isOrgAdmin && (
-                      <p style={{ marginBottom: 0, fontStyle: 'italic', fontSize: 16, }}>Sub-district admin</p>
+                      <p style={{ marginBottom: 0, fontStyle: 'italic', fontSize: 16 }}>
+                        Sub-district admin
+                      </p>
                     )}
                   </div>
                 );
@@ -731,9 +772,15 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
               setError={setCommunityModalError}
               handleSave={async communityData => {
                 if (isAdminOrg) {
+                  // we are updating users in the admin organization
                   if (existingCommunity.index) {
-                    updateEmailInApprovedUsers(communityData, organization);
+                    updateEmailInApprovedUsers(
+                      existingCommunity, // existing data
+                      communityData, // new data
+                      organization,
+                    );
                   } else {
+                    // they need to separately register for an account, so we won't create here
                     addEmailToApprovedUsers(communityData, organization);
                   }
                 } else {
@@ -747,7 +794,11 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
                     );
                     if (success) {
                       await firebase.user(existingCommunity.id).set(communityData, { merge: true });
-                      updateUserMapping(true);
+                      await updateEmailInApprovedUsers(
+                        existingCommunity, // existing data
+                        communityData,
+                        organization,
+                      );
                       setShowCommunityModal(false);
                     }
                   } else {
