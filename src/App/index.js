@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+
+import { compose } from 'recompose';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Navigation from '../components/Navigation';
@@ -23,7 +25,9 @@ import { setupAuthentication } from '../components/Session';
 import LostPage from '../pages/LostPage';
 import ManageOrganizationsPage from '../pages/ManageOrganizationsPage';
 import ManageUsersPage from '../pages/ManageUsersPage';
-import AnalyticsPage from '../pages/Analytics Page';
+import AnalyticsPage from '../pages/AnalyticsPage';
+import { setupFirebase } from '../components/Firebase';
+import { setupStore } from '../components/Store';
 
 class App extends Component {
   constructor(props) {
@@ -79,4 +83,8 @@ class App extends Component {
   }
 }
 
-export default setupAuthentication(App);
+export default compose(
+  setupFirebase,
+  setupAuthentication,
+  setupStore,
+)(App);

@@ -32,6 +32,7 @@ const ButtonLink = ({ text, to, href, onClick, back = false, noArrow = false }) 
     );
   } else if (onClick) {
     return (
+      // eslint-disable-next-line
       <a
         className={linkClassName}
         target="_blank"

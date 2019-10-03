@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { withFirebase } from '../Firebase';
 import { withRouter } from 'react-router-dom';
@@ -10,11 +11,13 @@ import { compose } from 'recompose';
 import * as ROUTES from '../../constants/routes';
 
 const _SignOutButton = ({ firebase, history }) => {
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const exitFunction = () => {
     setShowModal(false);
     setTimeout(() => {
       history.push(ROUTES.LANDING);
+      dispatch({ type: 'RESET_STORE' });
       firebase.doSignOut();
     }, MODAL_TIMEOUT_LENGTH);
   };

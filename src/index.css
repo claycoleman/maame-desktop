@@ -32,8 +32,122 @@ h6 {
     'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+.custom-datepicker,
+.custom-datepicker * {
+  font-family: 'Header Font', 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+}
+
+.custom-datepicker .react-datepicker__header {
+  background-color: #6c757d;
+}
+
+.custom-datepicker .react-datepicker__header,
+.custom-datepicker .react-datepicker__header * {
+  color: white;
+}
+
+.custom-datepicker .react-datepicker__navigation--next {
+  border-left-color: white;
+}
+
+.custom-datepicker .react-datepicker__navigation--previous {
+  border-right-color: white;
+}
+
+.custom-datepicker .react-datepicker__triangle {
+  border-bottom-color: white;
+}
+
+.custom-datepicker .react-datepicker__year-read-view--down-arrow,
+.custom-datepicker .react-datepicker__month-read-view--down-arrow,
+.custom-datepicker .react-datepicker__month-year-read-view--down-arrow code {
+  border-top-color: white;
+}
+
+.custom-datepicker .react-datepicker__year-dropdown,
+.custom-datepicker .react-datepicker__month-dropdown,
+.custom-datepicker .react-datepicker__month-year-dropdown {
+  background-color: #6c757d;
+}
+
+.custom-datepicker .react-datepicker__day--selected,
+.custom-datepicker .react-datepicker__month--selected {
+  background-color: #cc0000;
+}
+
+.rbt .rbt-input {
+  width: auto;
+  min-width: 200px;
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  white-space: nowrap;
+  height: calc(1.5em + 0.75rem + 2px);
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.rbt .rbt-input-hint input {
+  color: #ddd !important;
+}
+
+.rbt .rbt-input input {
+  color: #fff;
+}
+
+.rbt .rbt-input:hover {
+  color: #fff;
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+.rbt .rbt-input.focus,
+.rbt .rbt-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(130, 138, 145, 0.5);
+  color: #fff;
+  background-color: #545b62;
+  border-color: #4e555b;
+  outline: none;
+}
+
+.rbt .rbt-input-multi .rbt-input-wrapper {
+  margin: 0;
+}
+
+.rbt .rbt-input.focus .rbt-input-wrapper {
+  text-align: left;
+  padding-left: 8px;
+}
+
+.rbt .rbt-token {
+  color: #fff;
+  background-color: transparent;
+  margin: 0;
+}
+
+.dropdown-toggle::after, .rbt .rbt-token:after {
+  display: inline-block;
+  margin-left: .255em;
+  vertical-align: .155em;
+  content: "";
+  border-top: .3em solid;
+  border-right: .3em solid transparent;
+  border-bottom: 0;
+  border-left: .3em solid transparent;
 }
 
 @media (min-width: 1200px) {

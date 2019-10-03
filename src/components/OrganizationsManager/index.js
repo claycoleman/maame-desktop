@@ -1,5 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+
 import { Link } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -150,6 +152,7 @@ const NewSubdistrictModal = ({
 };
 
 const OrganizationsManager = ({ topLevelOrganization }) => {
+  // topLevelOrganization is coming from useTLO => redux
   // OFFLINE TESTING
   // topLevelOrganization = {
   //   country: 'USA',
@@ -157,10 +160,8 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
   //   id: 'tloID',
   // };
   const firebase = useContext(FirebaseContext);
-  const [organizationsError, organizationsLoading, organizations] = useOrganizationsFromTLO(
-    topLevelOrganization,
-    true,
-  );
+  const storeOrganizations = useSelector(state => state.organizations);
+  const organizationsLoading = useOrganizationsFromTLO(topLevelOrganization, true);
 
   const [saved, setSaved] = useState(false);
   const [toastText, setToastText] = useState('');
@@ -229,17 +230,19 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
     setShowSubdistrictModal(false);
   };
 
-  if (organizationsError) {
-    return (
-      <Row>
-        <h3>Uh oh...</h3>
-        <p>We encountered an error: {organizationsError}</p>
-      </Row>
-    );
-  }
+  // if (organizationsError) {
+  //   return (
+  //     <Row>
+  //       <h3>Uh oh...</h3>
+  //       <p>We encountered an error: {organizationsError}</p>
+  //     </Row>
+  //   );
+  // }
   return (
     <Row>
-      {organizationsLoading || !topLevelOrganization ? (
+      {organizationsLoading ||
+      !topLevelOrganization ||
+      topLevelOrganization.organizations === undefined ? (
         <div
           style={{
             width: '100%',
@@ -255,7 +258,8 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
         <>
           <Col xs={12}>
             <div className={homeStyles.sections}>
-              {organizations.map((organization, index) => {
+              {topLevelOrganization.organizations.map((organizationId, index) => {
+                const organization = storeOrganizations[organizationId];
                 return (
                   <Link
                     className={[homeStyles.sectionLink, homeStyles.withIcon].join(' ')}
@@ -284,7 +288,7 @@ const OrganizationsManager = ({ topLevelOrganization }) => {
                 );
               })}
             </div>
-            {organizations.length === 0 && (
+            {topLevelOrganization.organizations.length === 0 && (
               <p>There are no sub-districts for this district yet! Add some below.</p>
             )}
             <ButtonLinks

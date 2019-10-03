@@ -1,6 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import { to } from '../../modules/helpers';
 
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -21,6 +22,8 @@ class Firebase {
     this.userCollectionRef = this.db.collection('users');
     this.organizationCollectionRef = this.db.collection('organizations');
     this.topLevelOrganizationCollectionRef = this.db.collection('top-level-organizations');
+    this.pregnancyCollectionRef = this.db.collection('pregnancies');
+    this.patientCollectionRef = this.db.collection('patients');
   }
 
   // *** Auth API ***
@@ -28,21 +31,29 @@ class Firebase {
   doCreateUserWithEmailAndPassword = (email, password) =>
     this.auth.createUserWithEmailAndPassword(email, password);
 
-  doCreateUserAsAdminWithEmailAndPassword = (email, password) => {
+  doCreateUserAsAdminWithEmailAndPassword = async (email, password) => {
     const tempFirebase = require('firebase/app');
     require('firebase/auth');
     var secondaryApp = tempFirebase.initializeApp(config, 'Secondary');
 
-    return secondaryApp
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(firebaseUser => {
-        firebaseUser.secondaryLogout = async () => {
-          await secondaryApp.auth().signOut();
-          return secondaryApp.delete();
-        };
-        return firebaseUser;
-      });
+    const [error, authUser] = await to(
+      secondaryApp
+        .auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(firebaseUser => {
+          firebaseUser.secondaryLogout = async () => {
+            await secondaryApp.auth().signOut();
+            return secondaryApp.delete();
+          };
+          return firebaseUser;
+        }),
+    );
+
+    if (error) {
+      await secondaryApp.delete();
+      throw error;
+    }
+    return authUser;
   };
 
   doUpdateUserEmailAsAdmin = (oldEmail, newEmail, password) => {
@@ -126,6 +137,12 @@ class Firebase {
 
   topLevelOrganization = id => this.topLevelOrganizationCollectionRef.doc(id);
   topLevelOrganizations = () => this.topLevelOrganizationCollectionRef;
+
+  pregnancy = id => this.pregnancyCollectionRef.doc(id);
+  pregnancies = () => this.pregnancyCollectionRef;
+
+  patient = id => this.patientCollectionRef.doc(id);
+  patients = () => this.patientCollectionRef;
 }
 
 export default Firebase;

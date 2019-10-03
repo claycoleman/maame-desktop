@@ -14,7 +14,6 @@ import BasePage from '..';
 import { MODAL_TIMEOUT_LENGTH } from '../../constants/values';
 
 const LoginPage = () =>
-  // TODO fix the crazy jank
   BasePage(
     'Portal Sign In',
     <>

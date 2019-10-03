@@ -3,7 +3,6 @@ import BasePage from '..';
 import FlowCustomizer from '../../components/FlowCustomizer';
 import FlowVisitAssigner from '../../components/FlowVisitAssigner';
 
-import styles from './FlowCustomizerPage.module.css';
 import './styles.css';
 
 import Tab from 'react-bootstrap/Tab';
@@ -23,7 +22,7 @@ const TABS = {
 const FlowCustomizerPage = () => {
   const authUser = useContext(AuthUserContext);
 
-  const [error, loading, topLevelOrganization] = useTopLevelOrganization(
+  const [_loading, topLevelOrganization] = useTopLevelOrganization(
     authUser ? authUser.topLevelOrganizationId : null,
   );
 

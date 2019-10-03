@@ -1,6 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { MdArrowForward } from 'react-icons/md';
 import styles from './ButtonLinks.module.css';
 import ButtonLink from '../ButtonLink';
 

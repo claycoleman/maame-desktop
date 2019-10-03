@@ -1,5 +1,7 @@
 import React, { useState, useContext, useRef, useEffect } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 
@@ -9,11 +11,9 @@ import Col from 'react-bootstrap/Col';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Popover from 'react-bootstrap/Popover';
 
-import Toast from 'react-bootstrap/Toast';
-import { useOrganizationsFromTLO, useTopLevelOrganization, FirebaseContext } from '../Firebase';
+import { useTopLevelOrganization, FirebaseContext } from '../Firebase';
 import { BounceLoader } from 'react-spinners';
 
-import * as ROUTES from '../../constants/routes';
 import homeStyles from '../../pages/HomePage/HomePage.module.css';
 import ButtonLinks from '../ButtonLinks';
 
@@ -35,6 +35,7 @@ const NewCommunityModal = ({
   organization,
   topLevelOrganization,
   error,
+  saveStarted,
   setError,
   isAdminOrg,
 }) => {
@@ -48,7 +49,6 @@ const NewCommunityModal = ({
     false,
   );
   const [displayPassword, setDisplayPassword] = useState(false);
-  const [saveStarted, setSaveStarted] = useState(false);
 
   const preppedName = communityName.replace(/\W/g, '').toLowerCase();
   const communityEmail = `${preppedName}.${topLevelOrganization.district.toLowerCase()}@maame.org`;
@@ -134,7 +134,6 @@ const NewCommunityModal = ({
                     setError('Please enter a valid email.');
                     return;
                   }
-                  setSaveStarted(true);
                   const communityData = {
                     email,
                     adminName,
@@ -291,7 +290,6 @@ const NewCommunityModal = ({
                   email: communityEmail,
                   isOrgAdmin,
                 };
-                setSaveStarted(true);
                 handleSave(communityData);
               }}
               disabled={
@@ -361,49 +359,24 @@ const NewCommunityModal = ({
 const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
   const firebase = useContext(FirebaseContext);
 
-  const [usersLoading, setUsersLoading] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [toastText, setToastText] = useState('');
-
   const [existingCommunity, setExistingCommunity] = useState({});
 
   const [showCommunityModal, setShowCommunityModal] = useState(false);
   const [communityModalError, setCommunityModalError] = useState('');
+  const [saveStarted, setSaveStarted] = useState(false);
+  const dispatch = useDispatch();
 
   const userList = organization ? organization.approvedUsers : null;
-  const userMappingRef = useRef({});
+  const users = useSelector(state => state.users);
 
   const updateUserMapping = (forceRefresh = false) => {
     if (!isAdminOrg) {
-      setUsersLoading(true);
-
-      const newMapping = {};
-
-      // TODO we need to fix this to work if the userList is empty
       if (userList === null) {
         return;
       }
 
-      if (userList.length === 0) {
-        // we have received an userList, and it's empty
-        setUsersLoading(false);
-        return;
-      }
-
       userList.forEach(userEmail => {
-        if (
-          !forceRefresh &&
-          userMappingRef.current[userEmail] &&
-          !userMappingRef.current[userEmail].noUserDoc
-        ) {
-          newMapping[userEmail] = userMappingRef.current[userEmail];
-
-          if (Object.keys(newMapping).length === userList.length) {
-            // we've gotten all of our new users
-            userMappingRef.current = newMapping;
-            setUsersLoading(false);
-          }
-        } else {
+        if (!users[userEmail] || forceRefresh === userEmail) {
           firebase
             .users()
             .where('email', '==', userEmail)
@@ -412,20 +385,49 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
               if (snapshot && snapshot.docs && snapshot.docs.length > 0) {
                 const userData = snapshot.docs[0].data();
                 userData.id = snapshot.docs[0].id;
-                newMapping[userEmail] = userData;
+                dispatch({ type: 'ADD_USER', user: userData });
               } else {
                 // no user for that email, this shouldn't happen in the future
                 // after users are only created here
-                newMapping[userEmail] = { email: userEmail, noUserDoc: true };
-              }
-
-              if (Object.keys(newMapping).length === userList.length) {
-                // we've gotten all of our new users
-                userMappingRef.current = newMapping;
-                setUsersLoading(false);
+                dispatch({ type: 'ADD_USER', user: { email: userEmail, noUserDoc: true } });
               }
             });
         }
+        // if (
+        //   !forceRefresh &&
+        //   userMappingRef.current[userEmail] &&
+        //   !userMappingRef.current[userEmail].noUserDoc
+        // ) {
+        //   newMapping[userEmail] = userMappingRef.current[userEmail];
+
+        //   if (Object.keys(newMapping).length === userList.length) {
+        //     // we've gotten all of our new users
+        //     userMappingRef.current = newMapping;
+        //     setUsersLoading(false);
+        //   }
+        // } else {
+        //   firebase
+        //     .users()
+        //     .where('email', '==', userEmail)
+        //     .get()
+        //     .then(snapshot => {
+        //       if (snapshot && snapshot.docs && snapshot.docs.length > 0) {
+        //         const userData = snapshot.docs[0].data();
+        //         userData.id = snapshot.docs[0].id;
+        //         newMapping[userEmail] = userData;
+        //       } else {
+        //         // no user for that email, this shouldn't happen in the future
+        //         // after users are only created here
+        //         newMapping[userEmail] = { email: userEmail, noUserDoc: true };
+        //       }
+
+        //       if (Object.keys(newMapping).length === userList.length) {
+        //         // we've gotten all of our new users
+        //         userMappingRef.current = newMapping;
+        //         setUsersLoading(false);
+        //       }
+        //     });
+        // }
       });
     }
   };
@@ -436,6 +438,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
       setTimeout(() => {
         setExistingCommunity({});
         setCommunityModalError('');
+        setSaveStarted(false);
       }, 100);
     }
   }, [showCommunityModal]);
@@ -444,7 +447,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
     setShowCommunityModal(true);
   };
 
-  const addCommunityAndUser = async (firebase, communityData, password, organization) => {
+  const addCommunityAndUser = async (communityData, password, organization) => {
     let error, authUser;
 
     [error, authUser] = await to(
@@ -453,6 +456,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
 
     if (error) {
       setCommunityModalError(error.message);
+      setSaveStarted(false);
       return false;
     }
 
@@ -463,6 +467,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
         userId: authUser.user.uid,
         ...communityData,
         organizationId: organization.id,
+        topLevelOrganizationId: organization.topLevelOrganizationId,
         isTLOAdmin: false, // manually add admins in the Firebase console
       },
       { merge: true },
@@ -471,16 +476,17 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
     return true;
   };
 
-  const updateCommunityAndUser = async (firebase, newCommunityData, oldEmail, password) => {
+  const updateCommunityAndUser = async (newCommunityData, oldEmail, password) => {
     const newEmail = newCommunityData.email;
     if (newEmail === oldEmail) {
       return true;
     }
     // changing email
-    let error, _response;
-    [error, _response] = await to(firebase.doUpdateUserEmailAsAdmin(oldEmail, newEmail, password));
+    let error;
+    [error] = await to(firebase.doUpdateUserEmailAsAdmin(oldEmail, newEmail, password));
     if (error) {
       setCommunityModalError(error.message);
+      setSaveStarted(false);
       return false;
     }
     // success
@@ -495,10 +501,11 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
       setCommunityModalError(
         'You cannot remove this admin user, as your district must have at least one admin user.',
       );
+      setSaveStarted(false);
       return;
     }
 
-    let updatedUserData = { organizationId: '', topLevelOrganizationId: '' };
+    let updatedUserData = { organizationId: null, topLevelOrganizationId: null };
     if (isAdminOrg) {
       // take away isTLOAdmin status
       updatedUserData.isTLOAdmin = false;
@@ -528,6 +535,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
           ? 'An admin user with this email already exists in this district. Please use another email.'
           : 'A community with this name already exists. Please verify that you entered the community name correctly, or use another name. If you need to restore an existing community to a sub-district, please contact Maame support via email or WhatsApp.',
       );
+      setSaveStarted(false);
       return;
     }
     approvedUsers.push(email);
@@ -566,6 +574,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
     newCommunityData,
     organization,
   ) => {
+    updateUserMapping(newCommunityData.email);
     let approvedUsers = copyArray(organization.approvedUsers);
 
     if (
@@ -578,6 +587,7 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
           ? 'An admin user with this email already exists in this district. Please use another email.'
           : 'A community with this name already exists. Please verify that you entered the community name correctly, or use another name. If you need to restore an existing community to a sub-district, please contact Maame support via email or WhatsApp.',
       );
+      setSaveStarted(false);
       return;
     }
 
@@ -653,13 +663,14 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
   //     </Row>
   //   );
   // }
-  const [tloError, tloLoading, topLevelOrganization] = useTopLevelOrganization(
+  // _tloLoading
+  const [, topLevelOrganization] = useTopLevelOrganization(
     organization ? organization.topLevelOrganizationId : null,
   );
 
   return (
     <Row>
-      {usersLoading || !organization || !topLevelOrganization ? (
+      {!organization || !topLevelOrganization ? (
         <div
           style={{
             width: '100%',
@@ -700,9 +711,9 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
                     </div>
                   );
                 }
-                const communityObj = userMappingRef.current[userEmail];
+                const communityObj = users[userEmail];
                 if (!communityObj) {
-                  return;
+                  return null;
                 }
                 if (communityObj.noUserDoc) {
                   return (
@@ -713,7 +724,6 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
                         let communityName = userEmail.split('.', 1)[0];
                         communityName = communityName[0].toUpperCase() + communityName.slice(1);
                         await addCommunityAndUser(
-                          firebase,
                           {
                             firstName: communityName,
                             lastName: '',
@@ -769,8 +779,10 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
             <NewCommunityModal
               show={true}
               error={communityModalError}
+              saveStarted={saveStarted}
               setError={setCommunityModalError}
               handleSave={async communityData => {
+                setSaveStarted(true);
                 if (isAdminOrg) {
                   // we are updating users in the admin organization
                   if (existingCommunity.index) {
@@ -787,7 +799,6 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
                   if (existingCommunity.id) {
                     // updating
                     const success = await updateCommunityAndUser(
-                      firebase,
                       communityData,
                       existingCommunity.email,
                       topLevelOrganization.rup,
@@ -804,12 +815,12 @@ const CommunityUsersManager = ({ loading, organization, isAdminOrg }) => {
                   } else {
                     // creating new
                     const success = await addCommunityAndUser(
-                      firebase,
                       communityData,
                       topLevelOrganization.rup,
                       organization,
                     );
                     if (success) {
+                      updateUserMapping(communityData.email);
                       addEmailToApprovedUsers(communityData, organization);
                     }
                   }

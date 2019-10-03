@@ -59,6 +59,7 @@ class _RegisterForm extends Component {
             lastName,
             email,
             organizationId: null,
+            topLevelOrganizationId: null,
             isOrgAdmin: false, // manually add admins in the Firebase console
             isTLOAdmin: false, // manually add admins in the Firebase console
           },

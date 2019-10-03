@@ -94,7 +94,8 @@ const FlowVisitAssignerItem = ({ visitCode, availableFlows, topLevelOrganization
 };
 
 const FlowVisitAssigner = ({ topLevelOrganization }) => {
-  const [error, loading, visitFlows] = useTLOVisitFlows(topLevelOrganization);
+  // _error
+  const [ , loading, visitFlows] = useTLOVisitFlows(topLevelOrganization);
 
   return (
     <Row>

@@ -1,28 +1,25 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { AuthUserContext, withTLOAdminAuthorization } from '../../components/Session';
 import BasePage from '..';
 
 import * as ROUTES from '../../constants/routes';
 import OrganizationsManager from '../../components/OrganizationsManager';
-import { useTopLevelOrganization } from '../../components/Firebase';
+import { useTopLevelOrganization, useOrganization } from '../../components/Firebase';
 import ButtonLinks from '../../components/ButtonLinks';
 import CommunityUsersManager from '../../components/CommunityUsersManager';
-import { useOrganization } from '../../components/Firebase/hooks';
 
 // import styles from './HomePage.module.css';
 
 const ManageOrganizationsPage = () => {
   const authUser = useContext(AuthUserContext);
-  const [error, loading, topLevelOrganization] = useTopLevelOrganization(
+  // _tloLoading
+  const [, topLevelOrganization] = useTopLevelOrganization(
     authUser ? authUser.topLevelOrganizationId : null,
   );
   const adminOrganizationId = topLevelOrganization
     ? topLevelOrganization.adminOrganizationId
     : null;
-  const [adminUsersError, adminUsersLoading, adminOrganization] = useOrganization(
-    adminOrganizationId,
-  );
+  const adminOrganization = useOrganization(adminOrganizationId);
 
   return BasePage(
     'Manage Sub-Districts',

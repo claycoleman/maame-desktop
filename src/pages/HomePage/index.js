@@ -4,7 +4,6 @@ import { withOrganizationAuthorization, AuthUserContext } from '../../components
 import BasePage from '..';
 
 import * as ROUTES from '../../constants/routes';
-import ButtonLinks from '../../components/ButtonLinks';
 
 import styles from './HomePage.module.css';
 
@@ -45,7 +44,6 @@ const HomePage = () => {
   return BasePage(
     'Dashboard',
     <>
-      {/* TODO Mimic the app's dashboard page */}
       <div className={styles.sections}>
         {bodyLinks.map(linkItem => (
           <Link className={[styles.sectionLink, styles.large].join(' ')} to={linkItem.to}>

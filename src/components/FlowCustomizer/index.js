@@ -36,14 +36,13 @@ maksure you use the right authorization on the screens that need it
 
 */
 const FlowCustomizer = ({ topLevelOrganization }) => {
-  const firebase = useContext(FirebaseContext);
   const [currentVisitFlowIndex, setCurrentVisitFlowIndex] = useState(0);
-  const [visitFlowsError, visitFlowsLoading, visitFlows] = useTLOVisitFlows(topLevelOrganization);
-  const [screensError, screensLoading, screens] = useTLOScreens(topLevelOrganization);
+  const [_visitFlowsError, visitFlowsLoading, visitFlows] = useTLOVisitFlows(topLevelOrganization);
+  const [_screensError, screensLoading, screens] = useTLOScreens(topLevelOrganization);
 
   const [saved, setSaved] = useState(false);
   const [toastText, setToastText] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
 
   /*
   {
