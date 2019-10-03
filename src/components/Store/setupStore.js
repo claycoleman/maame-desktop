@@ -14,6 +14,8 @@ const initialState = {
   hasAllTLOOrganizations: false,
 
   users: {},
+
+  cachedStatsQueries: {},
 };
 
 function reducer(state = initialState, action) {
@@ -109,6 +111,15 @@ function reducer(state = initialState, action) {
       newUsers[action.user.email] = action.user;
       return updateStoreWith({
         users: newUsers,
+      });
+
+    case 'CACHE_STATS_QUERY':
+      const newCache = {
+        ...state.cachedStatsQueries,
+      };
+      newCache[action.key] = action.data;
+      return updateStoreWith({
+        cachedStatsQueries: newCache,
       });
 
     default:

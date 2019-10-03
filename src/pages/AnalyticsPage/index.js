@@ -130,19 +130,53 @@ const AnalyticsPage = () => {
   const dispatch = useDispatch();
   const organizationsLoading = useOrganizationsFromTLO(topLevelOrganization, true);
 
-  const [referenceDate, setReferenceDate] = useState(moment());
-  const [dateMode, setDateMode] = useState(AnalyticsDateMode.MONTH);
+  const [referenceDate, setReferenceDate] = useState(moment().subtract('month', 1));
+  const [dateMode, setDateMode] = useState(AnalyticsDateMode.QUARTER);
 
   // TODO if you're in the admin org, this should default to the entire community.
   const [scope, setScope] = useState(null);
   const [initialScopeSet, setInitialScopeSet] = useState(false);
   const [scopeOptions, setScopeOptions] = useState([]);
 
+  const refDate = referenceDate.clone();
+  const currentDateFormat = AnalyticsDateModeToFormat[dateMode];
+  const maxDateString = moment().format(currentDateFormat);
+  const currentDateString = refDate.format(currentDateFormat);
+  let displayDateString = currentDateString;
+
+  switch (dateMode) {
+    case AnalyticsDateMode.WEEK:
+      // 17 June 2019 - 23 June 2019
+      displayDateString = 'Week of ' + currentDateString;
+      break;
+
+    case AnalyticsDateMode.LAST_TWELVE_MONTHS:
+      // July 2018 - June 2019
+      displayDateString = `${refDate
+        .subtract(12, 'months')
+        .format(currentDateFormat)}–${currentDateString}`;
+      break;
+    case AnalyticsDateMode.QUARTER:
+      // Qx 2019
+      break;
+    case AnalyticsDateMode.HALF:
+      // Hx 2019
+      displayDateString = `${refDate.quarter() <= 2 ? 'H1' : 'H2'} ${refDate.format('YYYY')}`;
+      break;
+    case AnalyticsDateMode.YEAR:
+      // 2019
+      break;
+    case AnalyticsDateMode.MONTH:
+      // June 2019
+      break;
+  }
+
   const [antenatalStats, deliveryPNCStats, otherStats, loading, noResponse] = useStats(
     referenceDate,
     dateMode,
     scope,
     authUser,
+    displayDateString,
   );
 
   const updateUserMappingForEachOrganization = (forceRefresh = false) => {
@@ -268,39 +302,6 @@ const AnalyticsPage = () => {
     handleScope(!scope);
   }, [authUser, organization, topLevelOrganization, storeUsers, organizationsLoading]);
 
-  const refDate = referenceDate.clone();
-  const currentDateFormat = AnalyticsDateModeToFormat[dateMode];
-  const maxDateString = moment().format(currentDateFormat);
-  const currentDateString = refDate.format(currentDateFormat);
-  let displayDateString = currentDateString;
-
-  switch (dateMode) {
-    case AnalyticsDateMode.WEEK:
-      // 17 June 2019 - 23 June 2019
-      displayDateString = 'Week of ' + currentDateString;
-      break;
-
-    case AnalyticsDateMode.LAST_TWELVE_MONTHS:
-      // July 2018 - June 2019
-      displayDateString = `${refDate
-        .subtract(12, 'months')
-        .format(currentDateFormat)}–${currentDateString}`;
-      break;
-    case AnalyticsDateMode.QUARTER:
-      // Qx 2019
-      break;
-    case AnalyticsDateMode.HALF:
-      // Hx 2019
-      displayDateString = `${refDate.quarter() <= 2 ? 'H1' : 'H2'} ${refDate.format('YYYY')}`;
-      break;
-    case AnalyticsDateMode.YEAR:
-      // 2019
-      break;
-    case AnalyticsDateMode.MONTH:
-      // June 2019
-      break;
-  }
-
   const CustomFormInput = ({ value, onClick }) => {
     return (
       <Button variant="secondary" onClick={onClick} style={{ minWidth: 200 }}>
@@ -367,7 +368,9 @@ const AnalyticsPage = () => {
                     <div
                       className="rbt-token"
                       onClick={() => {
-                        typeaheadRef.current.clear();
+                        if (typeaheadRef.current) {
+                          typeaheadRef.current.clear();
+                        }
                       }}
                     >
                       {option.label}
@@ -376,11 +379,15 @@ const AnalyticsPage = () => {
                 }}
                 onChange={newSelection => {
                   setScope(newSelection[1] || newSelection[0]);
-                  typeaheadRef.current.blur();
+                  if (typeaheadRef.current) {
+                    typeaheadRef.current.blur();
+                  }
                 }}
                 inputProps={{
                   onFocusCapture: () => {
-                    typeaheadRef.current.clear();
+                    if (typeaheadRef.current) {
+                      typeaheadRef.current.clear();
+                    }
                   },
                 }}
                 options={scopeOptions}

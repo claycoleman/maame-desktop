@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { deepCopyObject } from '../../modules/helpers';
 import {
@@ -33,7 +34,11 @@ import {
 import { FirebaseContext } from '../../components/Firebase';
 import moment from 'moment';
 
-export default function useStats(referenceDate, dateMode, scope, user) {
+function getStatsQueryKey(displayDateString, scope) {
+  return `${displayDateString}-${JSON.stringify(scope)}`;
+}
+
+export default function useStats(referenceDate, dateMode, scope, user, displayDateString) {
   const firebase = useContext(FirebaseContext);
 
   const [loading, setLoading] = useState(true);
@@ -41,6 +46,9 @@ export default function useStats(referenceDate, dateMode, scope, user) {
   const [deliveryPNCStats, setDeliveryPNCStats] = useState(null);
   const [otherStats, setOtherStats] = useState(null);
   const [noResponse, setNoResponse] = useState(false);
+
+  const cachedStatsQueries = useSelector(state => state.cachedStatsQueries);
+  const dispatch = useDispatch();
 
   const withinCurrentTimeframe = date => {
     if (!moment.isMoment(date)) {
@@ -80,6 +88,17 @@ export default function useStats(referenceDate, dateMode, scope, user) {
     }
     setNoResponse(false);
     setLoading(true);
+
+    const cacheKey = getStatsQueryKey(displayDateString, scope);
+    const cachedQuery = cachedStatsQueries[cacheKey];
+    if (cachedQuery != null) {
+      // bingo
+      setAntenatalStats(cachedQuery.antenatalStats);
+      setDeliveryPNCStats(cachedQuery.deliveryPNCStats);
+      setOtherStats(cachedQuery.otherStats);
+      setLoading(false);
+      return;
+    }
 
     const refDate = referenceDate.clone();
     let query = firebase
@@ -317,6 +336,12 @@ export default function useStats(referenceDate, dateMode, scope, user) {
       setDeliveryPNCStats(deliveryPNCStats);
       setOtherStats(otherStats);
       setLoading(false);
+
+      dispatch({
+        type: 'CACHE_STATS_QUERY',
+        key: cacheKey,
+        data: { antenatalStats, deliveryPNCStats, otherStats },
+      });
     });
   }, [referenceDate, dateMode, scope, user]);
 
