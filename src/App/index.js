@@ -26,6 +26,7 @@ import LostPage from '../pages/LostPage';
 import ManageOrganizationsPage from '../pages/ManageOrganizationsPage';
 import ManageUsersPage from '../pages/ManageUsersPage';
 import AnalyticsPage from '../pages/AnalyticsPage';
+import RecentUsagePage from '../pages/RecentUsagePage';
 import { setupFirebase } from '../components/Firebase';
 import { setupStore } from '../components/Store';
 
@@ -62,6 +63,7 @@ class App extends Component {
 
             {/* COMMUNITY PAGES */}
             <Route exact path={ROUTES.ANALYTICS} component={AnalyticsPage} />
+            <Route exact path={ROUTES.RECENT_USAGE} component={RecentUsagePage} />
 
             {/* SUB DISTRICT PAGES */}
             <Route exact path={ROUTES.MANAGE_USERS} component={ManageUsersPage} />

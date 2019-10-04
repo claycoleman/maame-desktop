@@ -21,6 +21,10 @@ const HomePage = () => {
         text: 'View district, sub-district, and community analytics',
         to: ROUTES.ANALYTICS,
       },
+      {
+        text: 'View recent usage',
+        to: ROUTES.RECENT_USAGE,
+      },
     ];
   } else if (authUser.isOrgAdmin) {
     // sub district level
@@ -29,6 +33,10 @@ const HomePage = () => {
       {
         text: 'View sub-district, and community analytics',
         to: ROUTES.ANALYTICS,
+      },
+      {
+        text: 'View recent usage',
+        to: ROUTES.RECENT_USAGE,
       },
     ];
   } else {

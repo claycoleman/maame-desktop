@@ -16,6 +16,7 @@ export const ACCOUNT = '/account';
 
 /* COMMUNITY PAGES */
 export const ANALYTICS = '/analytics';
+export const RECENT_USAGE = '/recent-usage';
 
 /* SUB DISTRICT PAGES */
 export const MANAGE_USERS_BASE = '/manage-users/';

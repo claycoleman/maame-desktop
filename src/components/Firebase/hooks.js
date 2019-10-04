@@ -9,6 +9,7 @@ export function useOrganization(id) {
   const dispatch = useDispatch();
   const organization = useSelector(state => state.organizations[id]);
   const cachedListeners = useSelector(state => state.cachedListeners);
+  const [loading, setLoading] = useState(true);
 
   if (id && !cachedListeners[orgListenerKey(id)] && !organization) {
     const unsubscriber = firebase.organization(id).onSnapshot(
@@ -16,6 +17,7 @@ export function useOrganization(id) {
         const fetchedOrg = doc.data();
         fetchedOrg.id = doc.id;
         dispatch({ type: 'ADD_ORGANIZATION', organization: fetchedOrg });
+        setLoading(false);
       },
       err => {
         dispatch({ type: 'ADD_ORGANIZATION', organization: { error: err } });
@@ -23,7 +25,10 @@ export function useOrganization(id) {
     );
     dispatch({ type: 'FETCH_ORGANIZATION', organizationId: id, unsubscriber });
   }
-  return organization;
+  if (!!organization && loading) {
+    setLoading(false);
+  }
+  return [loading, organization];
 }
 
 export function useTopLevelOrganization(id) {
@@ -47,6 +52,9 @@ export function useTopLevelOrganization(id) {
       },
     );
     dispatch({ type: 'FETCH_TOP_LEVEL_ORGANIZATION', topLevelOrganizationId: id, unsubscriber });
+  }
+  if (!!topLevelOrganization && loading) {
+    setLoading(false);
   }
   return [loading, topLevelOrganization];
 }

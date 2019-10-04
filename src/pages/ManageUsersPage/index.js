@@ -14,7 +14,7 @@ const ManageUsersPage = ({ match }) => {
   const firebase = useContext(FirebaseContext);
   const authUser = useContext(AuthUserContext);
   const organizationId = match.params.orgId || (authUser ? authUser.organizationId : null);
-  const organization = useOrganization(organizationId);
+  const [, organization] = useOrganization(organizationId);
 
   return BasePage(
     `Manage Communities and Users for\n${organization ? organization.name : ''}`,

@@ -123,7 +123,7 @@ const AnalyticsPage = () => {
   );
 
   const organizationId = authUser ? authUser.organizationId : null;
-  const organization = useOrganization(organizationId);
+  const [, organization] = useOrganization(organizationId);
 
   const storeOrganizations = useSelector(state => state.organizations);
   const storeUsers = useSelector(state => state.users);

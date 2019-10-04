@@ -19,7 +19,7 @@ const ManageOrganizationsPage = () => {
   const adminOrganizationId = topLevelOrganization
     ? topLevelOrganization.adminOrganizationId
     : null;
-  const adminOrganization = useOrganization(adminOrganizationId);
+  const [, adminOrganization] = useOrganization(adminOrganizationId);
 
   return BasePage(
     'Manage Sub-Districts',

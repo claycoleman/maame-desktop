@@ -16,6 +16,7 @@ const initialState = {
   users: {},
 
   cachedStatsQueries: {},
+  cachedRecentUsage: {},
 };
 
 function reducer(state = initialState, action) {
@@ -104,16 +105,20 @@ function reducer(state = initialState, action) {
       });
     }
 
-    case 'ADD_USER':
+    case 'ADD_USER': {
       const newUsers = {
         ...state.users,
       };
       newUsers[action.user.email] = action.user;
+      if (action.useId) {
+        newUsers[action.user.id] = action.user;
+      }
       return updateStoreWith({
         users: newUsers,
       });
+    }
 
-    case 'CACHE_STATS_QUERY':
+    case 'CACHE_STATS_QUERY': {
       const newCache = {
         ...state.cachedStatsQueries,
       };
@@ -121,6 +126,17 @@ function reducer(state = initialState, action) {
       return updateStoreWith({
         cachedStatsQueries: newCache,
       });
+    }
+
+    case 'CACHE_RECENT_USAGE': {
+      const newCache = {
+        ...state.cachedRecentUsage,
+      };
+      newCache[action.key] = action.data;
+      return updateStoreWith({
+        cachedRecentUsage: newCache,
+      });
+    }
 
     default:
       return state;
