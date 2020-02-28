@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { withOrganizationAuthorization, AuthUserContext } from '../../components/Session';
 import BasePage from '..';
+import RefreshDataButtons from '../../components/RefreshDataButtons';
 
 import * as ROUTES from '../../constants/routes';
 
@@ -59,6 +60,8 @@ const HomePage = () => {
           </Link>
         ))}
       </div>
+      {/* <RefreshDataButtons /> */}
+
       {/* <div>
         <p>A bunch of text and other info</p>
       </div>
