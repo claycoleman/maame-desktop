@@ -26,6 +26,7 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "react-spinners": "^0.5.4",
+    "react-table": "^7.0.0-rc.16",
     "react-transition-group": "^4.1.1",
     "recompose": "^0.30.0",
     "redux": "^4.0.4"
