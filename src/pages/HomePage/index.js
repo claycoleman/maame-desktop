@@ -32,7 +32,7 @@ const HomePage = () => {
     bodyLinks = [
       { text: 'Manage communities', to: ROUTES.MANAGE_USERS_BASE },
       {
-        text: 'View sub-district, and community analytics',
+        text: 'View sub-district and community analytics',
         to: ROUTES.ANALYTICS,
       },
       {
@@ -54,8 +54,12 @@ const HomePage = () => {
     'Dashboard',
     <>
       <div className={styles.sections}>
-        {bodyLinks.map(linkItem => (
-          <Link className={[styles.sectionLink, styles.large].join(' ')} to={linkItem.to}>
+        {bodyLinks.map((linkItem) => (
+          <Link
+            key={linkItem.to}
+            className={[styles.sectionLink, styles.large].join(' ')}
+            to={linkItem.to}
+          >
             {linkItem.text}
           </Link>
         ))}
