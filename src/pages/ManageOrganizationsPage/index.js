@@ -23,12 +23,12 @@ const ManageOrganizationsPage = () => {
 
   return BasePage(
     'Manage Sub-Districts',
-    <>
+    <div style={{paddingBottom: 40}}>
       <OrganizationsManager topLevelOrganization={topLevelOrganization} />
       <hr style={{ marginTop: '2rem', marginBottom: '2rem' }} />
       <h3>Manage District Admin Users</h3>
       <CommunityUsersManager organization={adminOrganization} isAdminOrg={true} />
-    </>,
+    </div>,
     {
       backButton: (
         <ButtonLinks
